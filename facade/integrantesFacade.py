@@ -1,10 +1,7 @@
 from datetime import date
-from typing import Optional
 from flask import Blueprint, request, jsonify
-from models.integranteModel import Integrante
-from dtos.requests.createIntegranteRequest import CreateIntegranteRequest
-from dtos.responses.integranteResponse import IntegranteResponse
-from controllers.integranteController import create_integrante, list_integrantes
+from dtos.requests.CreateIntegranteRequest import CreateIntegranteRequest
+from controllers.IntegranteController import create_integrante, list_integrantes
 from pydantic import BaseModel, Field
 
 integrantes_bp = Blueprint("integrantes", __name__)
@@ -17,16 +14,6 @@ class CreateIntegranteRequest(BaseModel):
     dataDesligamento: date = Field(..., dataDesligamento="Data de desligamento do integrante")  # Deixa a data de desligamento como nula (None)
     linkSelfie: str = Field(..., linkSelfie="Link da selfie")
     setorId: int = Field(..., setorId = "Id do setor do integrante")
-
-class IntegranteResponse(BaseModel):
-    id: int
-    nome: str
-    matricula: str
-    email: str
-    dataIngresso: str
-    dataDesligamento: Optional[str] 
-    linkSelfie: str
-    setorNome: str
 
 @integrantes_bp.route("/integrantes", methods=["POST"])
 def add_integrante():

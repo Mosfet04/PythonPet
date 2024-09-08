@@ -1,7 +1,7 @@
 from peewee import Model, CharField, TextField, DateField, ForeignKeyField, AutoField, PostgresqlDatabase
-from .setorModel import Setor  # Importe o modelo Setor (se estiver em um arquivo separado)
-from .integranteModel import Integrante  # Importe o modelo Integrante (se estiver em um arquivo separado)
-from .noticiasCategoria import NoticiasCategoria
+from .SetorModel import Setor  # Importe o modelo Setor (se estiver em um arquivo separado)
+from .IntegranteModel import Integrante  # Importe o modelo Integrante (se estiver em um arquivo separado)
+from .NoticiasCategoriaModel import NoticiasCategoria
 from config import DATABASE
 
 # Configuração do banco de dados

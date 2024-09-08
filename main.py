@@ -1,10 +1,17 @@
 from flask import Flask
 from config import get_database
-from facade.integrantesFacade import integrantes_bp
-from models.integranteModel import Integrante
-from models.setorModel import Setor
-from models.noticiasModel import Noticia
-from models.noticiasCategoria import NoticiasCategoria
+from facade.IntegrantesFacade import integrantes_bp
+from models.IntegranteModel import Integrante
+from models.SetorModel import Setor
+from models.NoticiasModel import Noticia
+from models.NoticiasCategoriaModel import NoticiasCategoria
+from models.CategoriaEventoJorneqModel import CategoriaEventoJorneq
+from models.JorneqModel import Jorneq
+from models.MiniCursosModel import MiniCursos
+from models.PatrocinadoresJorneqModel import PatrocinadoresJorneq
+from models.PlanejamentoRelatorioModel import PlanejamentoRelatorio
+from models.ProcessoSeletivoModel import ProcessoSeletivo
+from models.ProgramacaoJorneqModel import ProgramacaoJorneq
 from flasgger import Swagger
 
 app = Flask(__name__)
@@ -31,6 +38,12 @@ swagger = Swagger(app, config={
 app.register_blueprint(integrantes_bp, url_prefix="/api")
 
 if __name__ == "__main__":
-    db.connect()
-    db.create_tables([Integrante, Setor, Noticia, NoticiasCategoria])
-    app.run(host='0.0.0.0',debug=True)
+    try:
+        db.connect()
+        db.create_tables([Integrante, Setor, Noticia, NoticiasCategoria, CategoriaEventoJorneq, Jorneq, MiniCursos, PatrocinadoresJorneq, PlanejamentoRelatorio, ProcessoSeletivo, ProgramacaoJorneq], safe=True)
+        app.run(host='0.0.0.0', debug=True)
+    except Exception as e:
+        print(f"Erro ao conectar ou criar tabelas no banco de dados: {e}")
+    finally:
+        if not db.is_closed():
+            db.close()

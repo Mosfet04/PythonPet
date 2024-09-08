@@ -3,8 +3,8 @@
 from datetime import date
 from peewee import Model, CharField, DateField, TextField, PostgresqlDatabase, ForeignKeyField, IntegrityError, DoesNotExist, OperationalError
 from config import DATABASE
-from dtos.responses.integranteResponse import IntegranteResponse
-from .setorModel import Setor
+from dtos.responses.IntegranteResponse import IntegranteResponse
+from .SetorModel import Setor
 
 # Configuração do banco de dados
 db = PostgresqlDatabase(

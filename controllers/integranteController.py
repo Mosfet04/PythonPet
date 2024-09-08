@@ -1,10 +1,9 @@
 # app/controllers/taskController.py
 
-from datetime import date
 from psycopg2 import IntegrityError
-from models.integranteModel import Integrante
-from dtos.requests.createIntegranteRequest import CreateIntegranteRequest
-from dtos.responses.integranteResponse import IntegranteResponse
+from models.IntegranteModel import Integrante
+from dtos.requests.CreateIntegranteRequest import CreateIntegranteRequest
+from dtos.responses.IntegranteResponse import IntegranteResponse
 
 def create_integrante(request: CreateIntegranteRequest) -> IntegranteResponse:
     """
