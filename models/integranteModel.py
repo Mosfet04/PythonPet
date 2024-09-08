@@ -3,6 +3,7 @@
 from datetime import date
 from peewee import Model, CharField, DateField, TextField, PostgresqlDatabase, ForeignKeyField, IntegrityError, DoesNotExist, OperationalError
 from config import DATABASE
+from dtos.requests import UpdateIntegranteRequest
 from dtos.responses.IntegranteResponse import IntegranteResponse
 from .SetorModel import Setor
 
@@ -27,9 +28,15 @@ class Integrante(Model):
     linkSelfie = TextField()
     setor = ForeignKeyField(Setor, backref="integrantes", null=True)  
 
-    def encontrarIntegrante(matricula: str):
+    def encontrarIntegrante(matricula: str, idIntegrante: int):
         try:
-            return Integrante.select().where(Integrante.matricula == matricula).first()
+            if ((matricula is None or matricula == "") and idIntegrante is not None):
+                return Integrante.select().where(Integrante.id == idIntegrante).first()
+            elif(matricula is not None and matricula != ""):
+                return Integrante.select().where(Integrante.matricula == matricula).first()
+            else:
+                print(f"Erro ao encontrar integrante: matrícula e idIntegrante são nulos")
+                return None
         except Exception as e:
             print(f"Erro ao encontrar integrante com matrícula {matricula}: {e}")
             return None
@@ -93,6 +100,39 @@ class Integrante(Model):
         except Exception as e:
             print(f"Erro inesperado ao listar integrantes: {e}")
             return []
-    
+
+    def atualizarIntegrante(self, request: UpdateIntegranteRequest) -> IntegranteResponse:  
+        try:
+            self.nome = request.nome
+            self.matricula = request.matricula
+            self.email = request.email
+            self.dataIngresso = request.dataIngresso
+            self.dataDesligamento = date.today() if request.desligamento else None
+            self.linkSelfie = request.linkSelfie
+            self.setor = request.setorId
+
+            self.save()
+
+            return IntegranteResponse(
+                id=self.id,
+                nome=self.nome,
+                dataDesligamento=str(self.dataDesligamento),
+                matricula=self.matricula,
+                email=self.email,
+                dataIngresso=str(self.dataIngresso),
+                linkSelfie=self.linkSelfie,
+                setorNome=self.setor.nome
+            ).dict()
+        except IntegrityError as e:
+            print(f"Erro ao atualizar integrante: {e}")
+            return None
+
+    def deletarIntegrante(self):
+        try:
+            self.delete_instance()
+            return True
+        except IntegrityError as e:
+            print(f"Erro ao deletar integrante: {e}")
+            return False
     class Meta:
         database = db
