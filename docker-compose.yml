@@ -1,0 +1,12 @@
+version: '3.11'
+
+services:
+  web:
+    build: .
+    ports:
+      - "8001:5000" # Mapeia a porta 8001 da rede local para a porta 5000 do container
+    volumes:
+      - .:/app # Monta o diretório atual no container
+    environment:
+      - FLASK_ENV=development # Define a variável de ambiente para desenvolvimento (se estiver usando Flask)
+    command: python main.py # Comando para iniciar a aplicação

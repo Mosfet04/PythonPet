@@ -33,4 +33,4 @@ app.register_blueprint(integrantes_bp, url_prefix="/api")
 if __name__ == "__main__":
     db.connect()
     db.create_tables([Integrante, Setor, Noticia, NoticiasCategoria])
-    app.run(debug=True)
+    app.run(host='0.0.0.0',debug=True)
