@@ -1,9 +1,9 @@
 # app/controllers/taskController.py
 
 from psycopg2 import IntegrityError
-from dtos.requests import UpdateIntegranteRequest
+from dtos.requests.Integrante.UpdateIntegranteRequest import UpdateIntegranteRequest
 from models.IntegranteModel import Integrante
-from dtos.requests.CreateIntegranteRequest import CreateIntegranteRequest
+from dtos.requests.Integrante.CreateIntegranteRequest import CreateIntegranteRequest
 from dtos.responses.IntegranteResponse import IntegranteResponse
 
 def create_integrante(request: CreateIntegranteRequest) -> IntegranteResponse:

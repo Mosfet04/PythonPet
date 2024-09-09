@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
-from dtos.requests.UpdateIntegranteRequest import UpdateIntegranteRequest
-from dtos.requests.CreateIntegranteRequest import CreateIntegranteRequest
+from dtos.requests.Integrante.UpdateIntegranteRequest import UpdateIntegranteRequest
+from dtos.requests.Integrante.CreateIntegranteRequest import CreateIntegranteRequest
 from controllers.IntegranteController import create_integrante, list_integrantes, update_integrante, remove_integrante
 
 integrantes_bp = Blueprint("integrantes", __name__)

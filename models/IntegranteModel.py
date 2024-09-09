@@ -3,7 +3,7 @@
 from datetime import date
 from peewee import Model, CharField, DateField, TextField, PostgresqlDatabase, ForeignKeyField, IntegrityError, DoesNotExist, OperationalError
 from config import DATABASE
-from dtos.requests import UpdateIntegranteRequest
+from dtos.requests.Integrante.UpdateIntegranteRequest import UpdateIntegranteRequest
 from dtos.responses.IntegranteResponse import IntegranteResponse
 from .SetorModel import Setor
 
