@@ -10,6 +10,8 @@ class NoticiaResponse(BaseModel):
     titulo: str
     conteudo: str
     autor: str
+    atualizador: str  | None
     dataCriacao: str
+    dataAtualizacao: str | None
     nomeSetorResponsavel: str 
     tituloCategoriaNoticia: str
