@@ -1,11 +1,13 @@
 # app/models/taskModel.py
 
 from datetime import date
+from typing import Optional
 from peewee import Model, CharField, DateField, TextField, PostgresqlDatabase, ForeignKeyField, IntegrityError, DoesNotExist, OperationalError
 from config import DATABASE
 from dtos.requests.Integrante.UpdateIntegranteRequest import UpdateIntegranteRequest
 from dtos.responses.IntegranteResponse import IntegranteResponse
 from .SetorModel import Setor
+from dtos.responses.PaginacaoResponse import PaginacaoResponse
 
 # Configuração do banco de dados
 db = PostgresqlDatabase(
@@ -67,21 +69,21 @@ class Integrante(Model):
             print(f"Erro ao criar integrante: {e}")
             return None
     
-    def listarIntegrantes(ativos: bool) -> list[IntegranteResponse]:
+    def listarIntegrantes(ativos: bool, page: int = 1, per_page: int = 10, 
+        NonPaginated: Optional[bool] = False) -> PaginacaoResponse[IntegranteResponse]:
         try:
-            listaIntegrantes: list[Integrante] = None
+            query = Integrante.select()
             if ativos:
-                try:
-                    listaIntegrantes = Integrante.select().where(Integrante.dataDesligamento == None)
-                except (DoesNotExist, OperationalError) as e:
-                    print(f"Erro ao buscar integrantes ativos: {e}")
-                    return []
-            else:
-                try:
-                    listaIntegrantes = Integrante.select()
-                except (DoesNotExist, OperationalError) as e:
-                    print(f"Erro ao buscar todos os integrantes: {e}")
-                    return []
+                query = query.where(Integrante.dataDesligamento == None)
+            
+            total_items = query.count()
+            total_pages = (total_items +per_page - 1) // per_page
+
+            if NonPaginated:
+                return query.first()
+            
+            query = query.paginate(page, per_page)
+            listaIntegrantes = query.execute()
 
             response_list = [
                 IntegranteResponse(
@@ -96,10 +98,16 @@ class Integrante(Model):
                 ).dict() for integrante in listaIntegrantes
             ]
 
-            return response_list
+            return PaginacaoResponse(
+                hasNextPage=page < total_pages,
+                page=page,
+                totalPage=total_pages,
+                qtdItens=total_items,
+                items=response_list
+            )
         except Exception as e:
             print(f"Erro inesperado ao listar integrantes: {e}")
-            return []
+            return PaginacaoResponse(hasNextPage=False, page=1, totalPage=1, qtdItens=0, items=[])
 
     def atualizarIntegrante(self, request: UpdateIntegranteRequest) -> IntegranteResponse:  
         try:

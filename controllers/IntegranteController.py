@@ -23,7 +23,8 @@ def list_integrantes(ativo) -> list[IntegranteResponse]:
     """
     Função para listar todos os integrantes do banco de dados.
     """
-    return Integrante.listarIntegrantes(ativo)
+    response = Integrante.listarIntegrantes(ativo)
+    return response.to_dict()
 
 def update_integrante(request: UpdateIntegranteRequest, idIntegrante: bool) -> IntegranteResponse:
     """
