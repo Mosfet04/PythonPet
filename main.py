@@ -35,7 +35,17 @@ swagger = Swagger(app, config={
     ],
     "static_url_path": "/flasgger_static",
     "swagger_ui": True,
-    "specs_route": "/api/docs/"
+    "specs_route": "/api/docs/",
+    "info": {
+        "title": "API de gerenciamento de registros do PET",
+        "description": "Esta é a documentação da API de registros do PET. Aqui você pode encontrar todos os endpoints disponíveis e como utilizá-los.",
+        "version": "1.0.0",
+        "termsOfService": "/terms",
+        "contact": {
+            "name": "Desenvolvedor - Mateus Meireles Ribeiro",
+            "email": "mateusmr4@gmail.com"
+        }
+    }
 })
 
 # Registra o blueprint das rotas dos integrantes
