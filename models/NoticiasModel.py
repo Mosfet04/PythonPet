@@ -2,7 +2,7 @@ from datetime import date, datetime
 from typing import Optional
 from peewee import (
     Model, CharField, TextField, DateField, ForeignKeyField, AutoField, 
-    PostgresqlDatabase, DoesNotExist, OperationalError
+    PostgresqlDatabase
 )
 from psycopg2 import IntegrityError
 from dtos.responses.PaginacaoResponse import PaginacaoResponse
@@ -78,7 +78,7 @@ class Noticia(Model):
         Lista notícias com base nos filtros fornecidos.
         """
         try:
-            query = Noticia.select()
+            query = Noticia.select().order_by(Noticia.criado_dia.desc())
             
             if categoria:
                 query = query.where(Noticia.categoria.nome == categoria)

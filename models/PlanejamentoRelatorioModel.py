@@ -107,7 +107,7 @@ class PlanejamentoRelatorio(Model):
                 items=response_list
             )
         except Exception as e:
-            print(f"Erro inesperado ao listar noticias: {e}")
+            print(f"Erro inesperado ao listar planejamentos: {e}")
             return PaginacaoResponse(hasNextPage=False, page=1, totalPage=1, qtdItens=0, items=[])
     
     def deletar(self):

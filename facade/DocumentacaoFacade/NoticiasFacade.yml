@@ -1,0 +1,253 @@
+AddNoticia:
+  tags:
+    - Noticias
+  parameters:
+    - name: body
+      in: body
+      required: true
+      schema:
+        id: CreateNoticiaRequest
+        required:
+          - titulo
+          - conteudo
+          - matriculaAutor
+          - idSetorResponsavel
+          - idCategoriaNoticia
+        properties:
+          titulo:
+            type: string
+            description: O título da notícia
+            example: "Novo Projeto Anunciado"
+          conteudo:
+            type: string
+            description: O conteúdo da notícia
+            example: "Detalhes sobre o novo projeto..."
+          matriculaAutor:
+            type: string
+            description: A matrícula do autor da notícia
+            example: "2019000000"
+          idSetorResponsavel:
+            type: integer
+            description: O ID do setor responsável pela notícia
+            example: 1
+          idCategoriaNoticia:
+            type: integer
+            description: O ID da categoria da notícia
+            example: 2
+  responses:
+    200:
+      description: Notícia criada com sucesso
+      schema:
+        id: NoticiaResponse
+        properties:
+          id:
+            type: integer
+            description: O ID da notícia
+            example: 1
+          titulo:
+            type: string
+            description: O título da notícia
+            example: "Novo Projeto Anunciado"
+          conteudo:
+            type: string
+            description: O conteúdo da notícia
+            example: "Detalhes sobre o novo projeto..."
+          autor:
+            type: string
+            description: O nome do autor da notícia
+            example: "Mateus Meireles Ribeiro"
+          dataCriacao:
+            type: string
+            format: date-time
+            description: A data de criação da notícia
+            example: "2021-01-01T12:00:00Z"
+          nomeSetorResponsavel:
+            type: string
+            description: O nome do setor responsável pela notícia
+            example: "Comunicação"
+          tituloCategoriaNoticia:
+            type: string
+            description: O título da categoria da notícia
+            example: "Projetos"
+
+GetNoticias:
+  tags:
+    - Noticias
+  parameters:
+    - name: categoria
+      in: query
+      type: string
+      description: A categoria da notícia
+    - name: data_inicial
+      in: query
+      type: string
+      format: date
+      description: A data inicial no formato YYYY-MM-DD
+    - name: data_final
+      in: query
+      type: string
+      format: date
+      description: A data final no formato YYYY-MM-DD
+    - name: page
+      in: query
+      type: integer
+      description: Número da página
+    - name: per_page
+      in: query
+      type: integer
+      description: Itens por página
+  responses:
+    200:
+      description: Lista as notícias
+      schema:
+        type: array
+        items:
+          $ref: '#/definitions/NoticiaResponse'
+
+UpdateNoticia:
+  tags:
+    - Noticias
+  parameters:
+    - name: idNoticia
+      in: path
+      required: true
+      type: integer
+      description: O ID da notícia
+      example: 1
+    - name: body
+      in: body
+      required: true
+      schema:
+        id: UpdateNoticiaRequest
+        required:
+          - titulo
+          - conteudo
+          - idAtualizador
+          - idCategoriaNoticia
+        properties:
+          titulo:
+            type: string
+            description: O título da notícia
+            example: "Novo Projeto Anunciado"
+          conteudo:
+            type: string
+            description: O conteúdo da notícia
+            example: "Detalhes sobre o novo projeto..."
+          idAtualizador:
+            type: integer
+            description: O ID do atualizador da notícia
+            example: 2
+          idCategoriaNoticia:
+            type: integer
+            description: O ID da categoria da notícia
+            example: 3
+  responses:
+    200:
+      description: Notícia atualizada com sucesso
+      schema:
+        id: NoticiaResponse
+        properties:
+          id:
+            type: integer
+            description: O ID da notícia
+            example: 1
+          titulo:
+            type: string
+            description: O título da notícia
+            example: "Novo Projeto Anunciado"
+          conteudo:
+            type: string
+            description: O conteúdo da notícia
+            example: "Detalhes sobre o novo projeto..."
+          autor:
+            type: string
+            description: O nome do autor da notícia
+            example: "Mateus Meireles Ribeiro"
+          atualizador:
+            type: string
+            description: O nome do atualizador da notícia
+            example: "Maria Souza"
+          dataCriacao:
+            type: string
+            format: date-time
+            description: A data de criação da notícia
+            example: "2021-01-01T12:00:00Z"
+          dataAtualizacao:
+            type: string
+            format: date-time
+            description: A data de atualização da notícia
+            example: "2021-01-02T12:00:00Z"
+          nomeSetorResponsavel:
+            type: string
+            description: O nome do setor responsável pela notícia
+            example: "Comunicação"
+          tituloCategoriaNoticia:
+            type: string
+            description: O título da categoria da notícia
+            example: "Projetos"
+
+DeleteNoticia:
+  tags:
+    - Noticias
+  parameters:
+    - name: idNoticia
+      in: path
+      required: true
+      type: integer
+      description: O ID da notícia
+      example: 1
+    - name: matricula
+      in: query
+      required: true
+      type: string
+      description: A matrícula do autor da notícia
+      example: "2019000000"
+  responses:
+    200:
+      description: Notícia removida com sucesso
+      schema:
+        type: boolean
+        description: Retorna True se a notícia foi removida com sucesso
+
+definitions:
+  NoticiaResponse:
+    type: object
+    properties:
+      id:
+        type: integer
+        description: O ID da notícia
+        example: 1
+      titulo:
+        type: string
+        description: O título da notícia
+        example: "Novo Projeto Anunciado"
+      conteudo:
+        type: string
+        description: O conteúdo da notícia
+        example: "Detalhes sobre o novo projeto..."
+      autor:
+        type: string
+        description: O nome do autor da notícia
+        example: "Mateus Meireles Ribeiro"
+      atualizador:
+        type: string
+        description: O nome do atualizador da notícia
+        example: "Maria Souza"
+      dataCriacao:
+        type: string
+        format: date-time
+        description: A data de criação da notícia
+        example: "2021-01-01T12:00:00Z"
+      dataAtualizacao:
+        type: string
+        format: date-time
+        description: A data de atualização da notícia
+        example: "2021-01-02T12:00:00Z"
+      nomeSetorResponsavel:
+        type: string
+        description: O nome do setor responsável pela notícia
+        example: "Comunicação"
+      tituloCategoriaNoticia:
+        type: string
+        description: O título da categoria da notícia
+        example: "Projetos"

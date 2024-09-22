@@ -1,0 +1,150 @@
+AddProcessoSeletivo:
+  tags:
+    - ProcessoSeletivo
+  parameters:
+    - name: body
+      in: body
+      required: true
+      schema:
+        id: CreateProcessoSeletivoRequest
+        required:
+          - link
+          - titulo
+          - dataEdital
+          - matricula
+        properties:
+          link:
+            type: string
+            description: O link do edital
+            example: "http://example.com/edital.pdf"
+          titulo:
+            type: string
+            description: O título do processo seletivo
+            example: "Processo Seletivo 2023"
+          dataEdital:
+            type: string
+            format: date
+            description: A data do edital
+            example: "2023-01-01"
+          matricula:
+            type: string
+            description: A matrícula do candidato
+            example: "123456"
+  responses:
+    200:
+      description: Processo seletivo criado com sucesso
+      schema:
+        id: ProcessoSeletivoResponse
+        properties:
+          id:
+            type: integer
+            description: O ID do processo seletivo
+            example: 1
+          link:
+            type: string
+            description: O link do edital
+            example: "http://example.com/edital.pdf"
+          dataEdital:
+            type: string
+            format: date
+            description: A data do edital
+            example: "2023-01-01"
+          titulo:
+            type: string
+            description: O título do processo seletivo
+            example: "Processo Seletivo 2023"
+
+GetProcessoSeletivo:
+  tags:
+    - ProcessoSeletivo
+  parameters:
+    - name: page
+      in: query
+      type: integer
+      required: false
+      description: Número da página
+      default: 1
+    - name: per_page
+      in: query
+      type: integer
+      required: false
+      description: Número de itens por página
+      default: 10
+  responses:
+    200:
+      description: Lista de processos seletivos
+      schema:
+        type: object
+        properties:
+          items:
+            type: array
+            items:
+              $ref: '#/definitions/ProcessoSeletivoResponse'
+          hasNextPage:
+            type: boolean
+            description: Indica se há mais páginas
+            example: true
+          page:
+            type: integer
+            description: Página atual
+            example: 1
+          totalPage:
+            type: integer
+            description: Total de páginas
+            example: 10
+          qtdItens:
+            type: integer
+            description: Quantidade total de itens
+            example: 100
+
+DeleteProcessoSeletivo:
+  tags:
+    - ProcessoSeletivo
+  parameters:
+    - name: idDocumento
+      in: path
+      required: true
+      type: integer
+      description: O ID do documento
+      example: 1
+    - name: matricula
+      in: query
+      required: true
+      type: string
+      description: A matrícula do integrante
+      example: "2019000000"
+  responses:
+    200:
+      description: Documento removido com sucesso
+      schema:
+        type: boolean
+        description: Retorna True se o documento foi removido com sucesso
+        example: true
+    400:
+      description: Erro ao remover o documento
+      schema:
+        type: boolean
+        description: Retorna False se houve um erro ao remover o documento
+        example: false
+
+definitions:
+  ProcessoSeletivoResponse:
+    type: object
+    properties:
+      id:
+        type: integer
+        description: O ID do processo seletivo
+        example: 1
+      link:
+        type: string
+        description: O link do edital
+        example: "http://example.com/edital.pdf"
+      dataEdital:
+        type: string
+        format: date
+        description: A data do edital
+        example: "2023-01-01"
+      titulo:
+        type: string
+        description: O título do processo seletivo
+        example: "Processo Seletivo 2023"

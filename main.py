@@ -3,6 +3,7 @@ from config import get_database
 from facade.IntegrantesFacade import integrantes_bp
 from facade.NoticiasFacade import noticias_bp
 from facade.PlanejamentoRelatorioFacade import planejamentoRelatorio_bp
+from facade.ProcessoSeletivoFacade import processoSeletivo_bp
 from models.IntegranteModel import Integrante
 from models.SetorModel import Setor
 from models.NoticiasModel import Noticia
@@ -40,6 +41,7 @@ swagger = Swagger(app, config={
 app.register_blueprint(integrantes_bp, url_prefix="/api")
 app.register_blueprint(noticias_bp, url_prefix="/api")
 app.register_blueprint(planejamentoRelatorio_bp, url_prefix="/api")
+app.register_blueprint(processoSeletivo_bp, url_prefix="/api")
 
 if __name__ == "__main__":
     try:
