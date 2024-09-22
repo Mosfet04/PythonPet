@@ -1,0 +1,201 @@
+AddMinicurso:
+  tags:
+    - Minicursos
+  parameters:
+    - name: body
+      in: body
+      required: true
+      schema:
+        id: CreateMinicursosRequest
+        required:
+          - titulo
+          - descricao
+          - imagem
+          - ativo
+          - matricula
+        properties:
+          titulo:
+            type: string
+            description: O título do mini-curso
+            example: "Introdução à Programação"
+          descricao:
+            type: string
+            description: A descrição do mini-curso
+            example: "Um curso introdutório sobre programação."
+          imagem:
+            type: string
+            description: O link da imagem do mini-curso
+            example: "http://example.com/imagem.jpg"
+          ativo:
+            type: boolean
+            description: Indica se o mini-curso está ativo
+            example: true
+          matricula:
+            type: string
+            description: A matrícula do responsável pelo mini-curso
+            example: "2019000000"
+  responses:
+    200:
+      description: Mini-curso criado com sucesso
+      schema:
+        id: MinicursosResponse
+        properties:
+          id:
+            type: integer
+            description: O ID do mini-curso
+            example: 1
+          titulo:
+            type: string
+            description: O título do mini-curso
+            example: "Introdução à Programação"
+          descricao:
+            type: string
+            description: A descrição do mini-curso
+            example: "Um curso introdutório sobre programação."
+          imagem:
+            type: string
+            description: O link da imagem do mini-curso
+            example: "http://example.com/imagem.jpg"
+          ativo:
+            type: boolean
+            description: Indica se o mini-curso está ativo
+            example: true
+
+GetMinicursos:
+  tags:
+    - Minicursos
+  parameters:
+    - name: ativo
+      in: query
+      type: boolean
+      description: Filtra os mini-cursos ativos
+      example: true
+  responses:
+    200:
+      description: Lista de mini-cursos
+      schema:
+        type: array
+        items:
+          $ref: '#/definitions/MinicursosResponse'
+
+UpdateMinicurso:
+  tags:
+    - Minicursos
+  parameters:
+    - name: matricula
+      in: path
+      required: true
+      type: string
+      description: Matricula do integrante
+      example: "2019000000"
+    - name: body
+      in: body
+      required: true
+      schema:
+        id: UpdateMinicursosRequest
+        required:
+          - id
+          - titulo
+          - descricao
+          - imagem
+          - ativo
+          - matricula
+        properties:
+          id:
+            type: integer
+            description: O ID do mini-curso
+            example: 1
+          titulo:
+            type: string
+            description: O título do mini-curso
+            example: "Introdução à Programação"
+          descricao:
+            type: string
+            description: A descrição do mini-curso
+            example: "Um curso introdutório sobre programação."
+          imagem:
+            type: string
+            description: O link da imagem do mini-curso
+            example: "http://example.com/imagem.jpg"
+          ativo:
+            type: boolean
+            description: Indica se o mini-curso está ativo
+            example: true
+          matricula:
+            type: string
+            description: A matrícula do responsável pelo mini-curso
+            example: "2019000000"
+  responses:
+    200:
+      description: Mini-curso atualizado com sucesso
+      schema:
+        id: MinicursosResponse
+        properties:
+          id:
+            type: integer
+            description: O ID do mini-curso
+            example: 1
+          titulo:
+            type: string
+            description: O título do mini-curso
+            example: "Introdução à Programação"
+          descricao:
+            type: string
+            description: A descrição do mini-curso
+            example: "Um curso introdutório sobre programação."
+          imagem:
+            type: string
+            description: O link da imagem do mini-curso
+            example: "http://example.com/imagem.jpg"
+          ativo:
+            type: boolean
+            description: Indica s
+
+DeleteMinicurso:
+  tags:
+    - Minicursos
+  parameters:
+    - name: idMinicurso
+      in: path
+      required: true
+      type: integer
+      description: O ID do minicurso a ser removido
+      example: 1
+    - name: matricula
+      in: query
+      required: true
+      type: string
+      description: A matrícula do integrante
+      example: 2019000000
+  responses:
+    200:
+      description: Minicurso removido com sucesso
+      schema:
+        type: boolean
+        description: Retorna True se o minicurso foi removido com sucesso
+
+definitions:
+  MinicursosResponse:
+    type: object
+    properties:
+      id:
+        type: integer
+        description: O ID do mini-curso
+        example: 1
+      titulo:
+        type: string
+        description: O título do mini-curso
+        example: "Introdução à Programação"
+      descricao:
+        type: string
+        description: A descrição do mini-curso
+        example: "Um curso introdutório sobre programação."
+      imagem:
+        type: string
+        description: O link da imagem do mini-curso
+        example: "http://example.com/imagem.jpg"
+      ativo:
+        type: boolean
+        description: Indica se o mini-curso está ativo
+        example: true
+        
