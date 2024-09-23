@@ -1,5 +1,6 @@
 # app/dtos/responses/integranteResponse.py
 
+from typing import Optional
 from pydantic import BaseModel
 
 class NoticiaResponse(BaseModel):
@@ -10,8 +11,8 @@ class NoticiaResponse(BaseModel):
     titulo: str
     conteudo: str
     autor: str
-    atualizador: str  | None
+    atualizador: Optional[str]
     dataCriacao: str
-    dataAtualizacao: str | None
+    dataAtualizacao: Optional[str]
     nomeSetorResponsavel: str 
     tituloCategoriaNoticia: str
