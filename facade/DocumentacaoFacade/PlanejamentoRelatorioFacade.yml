@@ -11,6 +11,7 @@ AddPlanejamentoRelatorio:
           - link
           - anoDocumento
           - tipoDocumento
+          - matriculaResponsavel
         properties:
           link:
             type: string
@@ -24,6 +25,10 @@ AddPlanejamentoRelatorio:
             type: string
             description: O tipo do documento (planejamento ou relatorio)
             example: "planejamento"
+          matriculaResponsavel:
+            type: string
+            description: A matrícula do integrante responsável
+            example: "2019000000"
   responses:
     200:
       description: Planejamento ou Relatório criado com sucesso

@@ -65,6 +65,14 @@ AddIntegrante:
 GetIntegrantes:
   tags:
     - Integrantes
+  parameters:
+    - name: ativo
+      in: query
+      required: false
+      type: string
+      enum: [true, false]
+      description: Lista somente membros ativos
+      example: true
   responses:
     200:
       description: Lista os integrantes
