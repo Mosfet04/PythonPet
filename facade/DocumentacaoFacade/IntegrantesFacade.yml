@@ -31,6 +31,9 @@ AddIntegrante:
           linkSelfie:
             type: string
             description: O link da selfie do integrante
+          setorId:
+            type: integer
+            description: O ID do setor do integrante
   responses:
     200:
       description: Integrante criado com sucesso
