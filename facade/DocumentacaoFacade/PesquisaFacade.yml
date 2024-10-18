@@ -1,0 +1,181 @@
+AddPesquisa:
+  tags:
+    - Pesquisa
+  parameters:
+    - name: body
+      in: body
+      required: true
+      schema:
+        id: CreatePesquisaRequest
+        required:
+          - nome
+          - descricao
+          - ativo
+          - matricula
+        properties:
+          nome:
+            type: string
+            description: O nome da pesquisa coletiva
+            example: "Introdução à Programação"
+          descricao:
+            type: string
+            description: A descrição da pesquisa coletiva
+            example: "Um curso introdutório sobre programação."
+          ativo:
+            type: boolean
+            description: Indica se a pesquisa coletiva está ativa
+            example: true
+          matricula:
+            type: string
+            description: A matrícula do aluno responsável pela adição da pesquisa coletiva
+            example: "2019000000"
+  responses:
+    200:
+      description: Pesquisa criado com sucesso
+      schema:
+        id: PesquisaResponse
+        properties:
+          id:
+            type: integer
+            description: O ID da pesquisa coletiva
+            example: 1
+          nome:
+            type: string
+            description: O nome da pesquisa coletiva
+            example: "Introdução à Programação"
+          descricao:
+            type: string
+            description: A descrição da pesquisa coletiva
+            example: "Um curso introdutório sobre programação."
+          ativo:
+            type: boolean
+            description: Indica se a pesquisa coletiva está ativa
+            example: true
+
+GetPesquisa:
+  tags:
+    - Pesquisa
+  parameters:
+    - name: ativo
+      in: query
+      required: true
+      type: boolean
+      enum: [true, false]
+      description: Filtra as pesquisas ativas
+      example: true
+  responses:
+    200:
+      description: Lista as pesquisas coletivas
+      schema:
+        type: array
+        items:
+          $ref: '#/definitions/PesquisaResponse'
+
+UpdatePesquisa:
+  tags:
+    - Pesquisa
+  parameters:
+    - name: matricula
+      in: path
+      required: true
+      type: string
+      description: Matricula do integrante
+      example: "2019000000"
+    - name: body
+      in: body
+      required: true
+      schema:
+        id: UpdatePesquisaRequest
+        required:
+          - id
+          - nome
+          - descricao
+          - ativo
+          - matricula
+        properties:
+          id:
+            type: integer
+            description: O ID do pesquisa coletiva
+            example: 1
+          nome:
+            type: string
+            description: O título da pesquisa
+            example: "Introdução à Programação"
+          descricao:
+            type: string
+            description: A descrição da pesquisa
+            example: "Um curso introdutório sobre programação."
+          ativo:
+            type: boolean
+            description: Indica se a pesquisa está ativa
+            example: true
+          matricula:
+            type: string
+            description: A matrícula do responsável pela update pesquisa
+            example: "2019000000"
+  responses:
+    200:
+      description: Pesquisa atualizado com sucesso
+      schema:
+        id: PesquisaResponse
+        properties:
+          id:
+            type: integer
+            description: O ID da pesquisa
+            example: 1
+          nome:
+            type: string
+            description: O nome da pesquisa
+            example: "Introdução à Programação"
+          descricao:
+            type: string
+            description: A descrição da pesquisa
+            example: "Um curso introdutório sobre programação."
+          ativo:
+            type: boolean
+            description: Indica s
+
+DeletePesquisa:
+  tags:
+    - Pesquisa
+  parameters:
+    - name: idPesquisa
+      in: path
+      required: true
+      type: integer
+      description: O ID da pesquisa coletiva
+      example: 1
+    - name: matricula
+      in: query
+      required: true
+      type: string
+      description: A matrícula do integrante
+      example: 2019000000
+  responses:
+    200:
+      description: Pesquisa removida com sucesso
+      schema:
+        type: boolean
+        description: Retorna True se a pesquisa foi removida com sucesso
+
+definitions:
+  PesquisaResponse:
+    type: object
+    properties:
+      id:
+        type: integer
+        description: O ID da pesquisa coletiva
+        example: 1
+      nome:
+        type: string
+        description: O nome da pesquisa
+        example: "Introdução à Programação"
+      descricao:
+        type: string
+        description: A descrição da pesquisa
+        example: "Um curso introdutório sobre programação."
+      ativo:
+        type: boolean
+        description: Indica se a pesquisa está ativo
+        example: true
+        
