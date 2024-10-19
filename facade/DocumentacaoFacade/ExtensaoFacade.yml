@@ -1,0 +1,171 @@
+AddExtensao:
+  tags:
+    - Extensao
+  parameters:
+    - name: body
+      in: body
+      required: true
+      schema:
+        id: CreateExtensaoRequest
+        required:
+          - nome
+          - descricao
+          - ativo
+          - tipo
+          - matricula
+        properties:
+          nome:
+            type: string
+            description: O nome da extensao coletiva
+            example: "Introdução à Programação"
+          descricao:
+            type: string
+            description: A descrição da extensao coletiva
+            example: "Um curso introdutório sobre programação."
+          ativo:
+            type: boolean
+            description: Indica se a extensao coletiva está ativa
+            example: true
+          tipo:
+            type: integer
+            enum: [1, 2, 3]
+            description: O tipo da extensao coletiva
+            example: 1
+          matricula:
+            type: string
+            description: A matrícula do aluno responsável pela adição da extensao coletiva
+            example: "2019000000"
+  responses:
+    200:
+      description: Extensao criado com sucesso
+      schema:
+        $ref: '#/definitions/ExtensaoResponse'
+
+GetExtensao:
+  tags:
+    - Extensao
+  parameters:
+    - name: ativo
+      in: query
+      required: true
+      type: string
+      enum: [true, false]
+      description: Filtra as extensaos ativas
+      example: true
+    - name: tipo
+      in: query
+      required: true
+      type: integer
+      enum: [1, 2, 3]
+      description: Filtra as extensaos por tipo
+      example: 1
+  responses:
+    200:
+      description: Lista as extensaos coletivas
+      schema:
+        type: array
+        items:
+          $ref: '#/definitions/ExtensaoResponse'
+
+UpdateExtensao:
+  tags:
+    - Extensao
+  parameters:
+    - name: matricula
+      in: path
+      required: true
+      type: string
+      description: Matricula do integrante
+      example: "2019000000"
+    - name: body
+      in: body
+      required: true
+      schema:
+        id: UpdateExtensaoRequest
+        required:
+          - id
+          - nome
+          - descricao
+          - ativo
+          - tipo
+          - matricula
+        properties:
+          id:
+            type: integer
+            description: O ID do extensao coletiva
+            example: 1
+          nome:
+            type: string
+            description: O título da extensao
+            example: "Introdução à Programação"
+          descricao:
+            type: string
+            description: A descrição da extensao
+            example: "Um curso introdutório sobre programação."
+          ativo:
+            type: boolean
+            description: Indica se a extensao está ativa
+            example: true
+          tipo:
+            type: integer
+            enum: [1, 2, 3]
+            description: O tipo da extensao
+            example: 1
+          matricula:
+            type: string
+            description: A matrícula do responsável pela update extensao
+            example: "2019000000"
+  responses:
+    200:
+      description: Extensao atualizado com sucesso
+      schema:
+        $ref: '#/definitions/ExtensaoResponse'
+
+DeleteExtensao:
+  tags:
+    - Extensao
+  parameters:
+    - name: idExtensao
+      in: path
+      required: true
+      type: integer
+      description: O ID da extensao coletiva
+      example: 1
+    - name: matricula
+      in: query
+      required: true
+      type: string
+      description: A matrícula do integrante
+      example: "2019000000"
+  responses:
+    200:
+      description: Extensao removida com sucesso
+      schema:
+        type: boolean
+        description: Retorna True se a extensao foi removida com sucesso
+
+definitions:
+  ExtensaoResponse:
+    type: object
+    properties:
+      id:
+        type: integer
+        description: O ID da extensao coletiva
+        example: 1
+      nome:
+        type: string
+        description: O nome da extensao
+        example: "Introdução à Programação"
+      descricao:
+        type: string
+        description: A descrição da extensao
+        example: "Um curso introdutório sobre programação."
+      tipo:
+        type: integer
+        enum: [1, 2, 3]
+        description: O tipo da extensao
+        example: 1
+      ativo:
+        type: boolean
+        description: Indica se a extensao está ativo
+        example: true

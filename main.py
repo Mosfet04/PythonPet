@@ -6,6 +6,7 @@ from facade.PlanejamentoRelatorioFacade import planejamentoRelatorio_bp
 from facade.ProcessoSeletivoFacade import processoSeletivo_bp
 from facade.MiniCursosFacade import minicursos_bp
 from facade.PesquisaFacade import pesquisa_bp
+from facade.ExtensaoFacade import extensao_bp
 from models.IntegranteModel import Integrante
 from models.SetorModel import Setor
 from models.NoticiasModel import Noticia
@@ -18,6 +19,7 @@ from models.PlanejamentoRelatorioModel import PlanejamentoRelatorio
 from models.ProcessoSeletivoModel import ProcessoSeletivo
 from models.ProgramacaoJorneqModel import ProgramacaoJorneq
 from models.PesquisaModel import Pesquisa
+from models.ExtensaoModel import Extensao
 from flasgger import Swagger
 
 app = Flask(__name__)
@@ -57,11 +59,12 @@ app.register_blueprint(planejamentoRelatorio_bp, url_prefix="/api")
 app.register_blueprint(processoSeletivo_bp, url_prefix="/api")
 app.register_blueprint(minicursos_bp, url_prefix="/api")
 app.register_blueprint(pesquisa_bp, url_prefix="/api")
+app.register_blueprint(extensao_bp, url_prefix="/api")
 
 if __name__ == "__main__":
     try:
         db.connect()
-        db.create_tables([Integrante, Setor, Noticia, NoticiasCategoria, CategoriaEventoJorneq, Jorneq, MiniCursos, PatrocinadoresJorneq, PlanejamentoRelatorio, ProcessoSeletivo, ProgramacaoJorneq, Pesquisa], safe=True)
+        db.create_tables([Integrante, Setor, Noticia, NoticiasCategoria, CategoriaEventoJorneq, Jorneq, MiniCursos, PatrocinadoresJorneq, PlanejamentoRelatorio, ProcessoSeletivo, ProgramacaoJorneq, Pesquisa, Extensao], safe=True)
         if Setor.select().count() == 0:
             # Inserir registros
             Setor.insert_many([
