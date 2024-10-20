@@ -64,7 +64,7 @@ class Extensao(Model):
             if idExtensao:
                 return query.where(Extensao.id == idExtensao).first()
             else:
-                query.where(Extensao.tipo == tipo.value)
+                query = query.where(Extensao.tipo == tipo.value)
             
             total_items = query.count()
             total_pages = (total_items +per_page - 1) // per_page
