@@ -1,5 +1,6 @@
 from flask import Blueprint, request, jsonify
 from flasgger import swag_from
+from flask_jwt_extended import jwt_required
 from Utils.Util import Util
 from dtos.requests.Integrante.UpdateIntegranteRequest import UpdateIntegranteRequest
 from dtos.requests.Integrante.CreateIntegranteRequest import CreateIntegranteRequest
@@ -10,9 +11,13 @@ integrantes_bp = Blueprint("integrantes", __name__)
 
 @integrantes_bp.route("/integrantes", methods=["POST"])
 @swag_from(documentacao.get('AddIntegrante'))
+@Util.token_required
 def add_integrante():
     """
     Cria um novo integrante
+    ---
+    security:
+      - Bearer: []
     """
     data = request.get_json()
     request_obj = CreateIntegranteRequest(**data)
@@ -33,9 +38,13 @@ def get_integrantes():
 
 @integrantes_bp.route("/integrantes/<int:idIntegrante>", methods=["POST"])
 @swag_from(documentacao.get('UpdateIntegrante'))
+@Util.token_required
 def post_integrantes(idIntegrante):
       """
       Atualiza as informações de um integrante
+      ---
+      security:
+        - Bearer: []
       """
       data = request.get_json()
       request_obj = UpdateIntegranteRequest(**data)
@@ -44,9 +53,13 @@ def post_integrantes(idIntegrante):
       return jsonify(integrante)
 @integrantes_bp.route("/integrantes/<int:idIntegrante>", methods=["DELETE"])
 @swag_from(documentacao.get('DeleteIntegrante'))
+@Util.token_required
 def delete_integrantes(idIntegrante):
     """
       Remove do banco um integrante cadastrado
+      ---
+      security:
+        - Bearer: []
     """
     matricula = request.args.get("matricula", default=None, type=str)
     integrantes = remove_integrante(idIntegrante, matricula)

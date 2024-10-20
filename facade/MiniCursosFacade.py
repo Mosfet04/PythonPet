@@ -10,9 +10,13 @@ minicursos_bp = Blueprint("mini_cursos", __name__)
 
 @minicursos_bp.route("/mini_cursos", methods=["POST"])
 @swag_from(documentacao.get('AddMinicurso'))
+@Util.token_required
 def add_minicurso():
     """
     Cria um novo mini-curso
+    ---
+    security:
+      - Bearer: []
     """
     data = request.get_json()
     request_obj = CreateMinicursosRequest(**data)
@@ -33,9 +37,13 @@ def get_minicursos():
 
 @minicursos_bp.route("/mini_cursos/<string:matricula>", methods=["POST"])
 @swag_from(documentacao.get('UpdateMinicurso'))
+@Util.token_required
 def post_minicursos(matricula):
       """
       Atualiza as informações de um mini-curso
+      ---
+      security:
+        - Bearer: []
       """
       data = request.get_json()
       request_obj = UpdateMinicursosRequest(**data)
@@ -45,9 +53,13 @@ def post_minicursos(matricula):
 
 @minicursos_bp.route("/mini-cursos/<int:idMinicurso>", methods=["DELETE"])
 @swag_from(documentacao.get('DeleteMinicurso'))
+@Util.token_required
 def delete_minicurso(idMinicurso):
     """
       Remove do banco um mini-curso cadastrado
+      ---
+      security:
+        - Bearer: []
     """
     matricula = request.args.get("matricula", default=None, type=str)
     minicurso = remove_minicurso(idMinicurso, matricula)

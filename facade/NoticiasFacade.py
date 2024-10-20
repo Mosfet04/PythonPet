@@ -11,9 +11,13 @@ noticias_bp = Blueprint("noticias", __name__)
 
 @noticias_bp.route("/noticias", methods=["POST"])
 @swag_from(documentacao.get('AddNoticia'))
+@Util.token_required
 def add_noticia():
     """
     Cria uma nova noticia
+    ---
+    security:
+      - Bearer: []
     """
     data = request.get_json()
     request_obj = CreateNoticiaRequest(**data)
@@ -38,9 +42,13 @@ def get_noticias():
 
 @noticias_bp.route("/noticias/<int:idNoticia>", methods=["POST"])
 @swag_from(documentacao.get('UpdateNoticia'))
+@Util.token_required
 def post_noticia(idNoticia):
       """
       Atualiza as informações de uma notícia
+      ---
+      security:
+        - Bearer: []
       """
       data = request.get_json()
       request_obj = UpdateNoticiaRequest(**data)
@@ -50,9 +58,13 @@ def post_noticia(idNoticia):
 
 @noticias_bp.route("/noticias/<int:idNoticia>", methods=["DELETE"])
 @swag_from(documentacao.get('DeleteNoticia'))
+@Util.token_required
 def delete_noticia(idNoticia):
     """
       Remove do banco um integrante cadastrado
+      ---
+      security:
+        - Bearer: []
     """
     matricula = request.args.get("matricula", default=None, type=str)
     noticia = remove_noticia(idNoticia, matricula)

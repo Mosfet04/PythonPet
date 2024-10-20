@@ -9,9 +9,13 @@ documentacao = Util.read_yaml("facade/DocumentacaoFacade/PlanejamentoRelatorioFa
 
 @planejamentoRelatorio_bp.route("/planejamento_relatorio", methods=["POST"])
 @swag_from(documentacao.get('AddPlanejamentoRelatorio'))
+@Util.token_required
 def add_planejamentoRelatorio():
     """
     Cria um novo planejamento ou relatório
+    ---
+    security:
+      - Bearer: []
     """
     data = request.get_json()
     request_obj = CreatePlanejamentoRelatorioRequest(**data)
@@ -31,9 +35,13 @@ def get_integrantes():
       
 @planejamentoRelatorio_bp.route("/planejamento_relatorio/<int:idDocumento>", methods=["DELETE"])
 @swag_from(documentacao.get('DeletePlanejamentoRelatorio'))
+@Util.token_required
 def delete_integrantes(idDocumento):
     """
     Remove um planejamento ou relatório do banco de dados
+    ---
+    security:
+      - Bearer: []
     """
     matricula = request.args.get("matricula", default=None, type=str)
     integrantes = remove_planejamentoRelatorio(idDocumento, matricula)

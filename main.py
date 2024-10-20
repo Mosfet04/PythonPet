@@ -40,6 +40,19 @@ swagger = Swagger(app, config={
     "static_url_path": "/flasgger_static",
     "swagger_ui": True,
     "specs_route": "/api/docs/",
+    "securityDefinitions": {
+        "Bearer": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header",
+            "description": "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\""
+        }
+    },
+    "security": [
+        {
+            "Bearer": []
+        }
+    ],
     "info": {
         "title": "API de gerenciamento de registros do PET",
         "description": "Esta é a documentação da API de registros do PET. Aqui você pode encontrar todos os endpoints disponíveis e como utilizá-los.",

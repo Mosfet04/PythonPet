@@ -9,9 +9,13 @@ documentacao = Util.read_yaml("facade/DocumentacaoFacade/ProcessoSeletivoFacade.
 
 @processoSeletivo_bp.route("/processo_seletivo", methods=["POST"])
 @swag_from(documentacao.get('AddProcessoSeletivo'))
+@Util.token_required
 def add_processoSeletivo():
     """
     Cria um novo processo seletivo
+    ---
+    security:
+      - Bearer: []
     """
     data = request.get_json()
     request_obj = CreateProcessoSeletivoRequest(**data)
@@ -33,9 +37,13 @@ def get_processoSeletivo():
       
 @processoSeletivo_bp.route("/pprocesso_seletivo/<int:idDocumento>", methods=["DELETE"])
 @swag_from(documentacao.get('DeleteProcessoSeletivo'))
+@Util.token_required
 def delete_processoSeletivo(idDocumento):
     """
     Remove um processo seletivo do banco de dados
+    ---
+    security:
+      - Bearer: []
     """
     matricula = request.args.get("matricula", default=None, type=str)
     integrantes = remove_processoSeletivo(idDocumento, matricula)

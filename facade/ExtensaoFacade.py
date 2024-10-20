@@ -11,9 +11,13 @@ extensao_bp = Blueprint("extensao", __name__)
 
 @extensao_bp.route("/extensao", methods=["POST"])
 @swag_from(documentacao.get('AddExtensao'))
+@Util.token_required
 def add_extensao():
     """
     Cria um novo projeto de extensão
+    ---
+    security:
+      - Bearer: []
     """
     data = request.get_json()
     request_obj = CreateExtensaoRequest(**data)
@@ -36,9 +40,13 @@ def get_extensao():
 
 @extensao_bp.route("/extensao/<string:matricula>", methods=["POST"])
 @swag_from(documentacao.get('UpdateExtensao'))
+@Util.token_required
 def post_extensao(matricula):
       """
       Atualiza as informações de uma extensão
+      ---
+      security:
+        - Bearer: []
       """
       data = request.get_json()
       request_obj = UpdateExtensaoRequest(**data)
@@ -48,9 +56,13 @@ def post_extensao(matricula):
 
 @extensao_bp.route("/extensao/<int:idExtensao>", methods=["DELETE"])
 @swag_from(documentacao.get('DeleteExtensao'))
+@Util.token_required
 def delete_extensao(idExtensao):
     """
       Remove do banco uma extensao
+      ---
+      security:
+        - Bearer: []
     """
     matricula = request.args.get("matricula", default=None, type=str)
     extensao = remove_extensao(idExtensao, matricula)

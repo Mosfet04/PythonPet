@@ -10,9 +10,13 @@ pesquisa_bp = Blueprint("pesquisa", __name__)
 
 @pesquisa_bp.route("/pesquisa", methods=["POST"])
 @swag_from(documentacao.get('AddPesquisa'))
+@Util.token_required
 def add_pesquisa():
     """
     Cria uma nova pesquisa coletiva
+    ---
+    security:
+      - Bearer: []
     """
     data = request.get_json()
     request_obj = CreatePesquisaRequest(**data)
@@ -34,9 +38,13 @@ def get_minicursos():
 
 @pesquisa_bp.route("/pesquisa/<string:matricula>", methods=["POST"])
 @swag_from(documentacao.get('UpdatePesquisa'))
+@Util.token_required
 def post_minicursos(matricula):
       """
       Atualiza as informações de uma pesquisa coletiva
+      ---
+        security:
+            - Bearer: []
       """
       data = request.get_json()
       request_obj = UpdatePesquisaRequest(**data)
@@ -46,9 +54,13 @@ def post_minicursos(matricula):
 
 @pesquisa_bp.route("/pesquisa/<int:idPesquisa>", methods=["DELETE"])
 @swag_from(documentacao.get('DeletePesquisa'))
+@Util.token_required
 def delete_minicurso(idPesquisa):
     """
       Remove do banco um mini-curso cadastrado
+      ---
+      security:
+        - Bearer: []
     """
     matricula = request.args.get("matricula", default=None, type=str)
     pesquisa = remove_pesquisa(idPesquisa, matricula)
