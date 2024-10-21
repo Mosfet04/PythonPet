@@ -1,27 +1,20 @@
 from datetime import date, datetime
 from typing import Optional
 from peewee import (
-    Model, CharField, TextField, DateField, ForeignKeyField, AutoField, 
-    PostgresqlDatabase
+    Model, CharField, TextField, DateField, ForeignKeyField, AutoField
 )
 from psycopg2 import IntegrityError
 from dtos.responses.PaginacaoResponse import PaginacaoResponse
 from dtos.requests.Noticias.CreateNoticiaRequest import CreateNoticiaRequest
 from dtos.requests.Noticias.UpdateNoticiaRequest import UpdateNoticiaRequest
 from dtos.responses.NoticiaResponse import NoticiaResponse
+from servicos.postegre import Postgre
 from .SetorModel import Setor
 from .IntegranteModel import Integrante
 from .NoticiasCategoriaModel import NoticiasCategoria
-from config import DATABASE
 
 # Configuração do banco de dados
-db = PostgresqlDatabase(
-    DATABASE['name'],
-    user=DATABASE['user'],
-    password=DATABASE['password'],
-    host=DATABASE['host'],
-    port=DATABASE['port']
-)
+db = Postgre.get_database()
 
 class Noticia(Model):
     """

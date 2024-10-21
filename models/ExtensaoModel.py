@@ -1,23 +1,17 @@
 # app/models/taskModel.py
 
 from typing import Optional
-from peewee import Model, CharField, PostgresqlDatabase, AutoField, BooleanField, TextField, IntegerField
+from peewee import Model, CharField, AutoField, BooleanField, TextField, IntegerField
 from psycopg2 import IntegrityError
 from dtos.enums.ExtensaoTipoEnum import ExtensaoTipo
 from dtos.requests.Extensao.CreateExtensaoRequest import CreateExtensaoRequest
 from dtos.requests.Extensao.UpdateExtensaoRequest import UpdateExtensaoRequest
 from dtos.responses.ExtensaoResponse import ExtensaoResponse
-from config import DATABASE
 from dtos.responses.PaginacaoResponse import PaginacaoResponse
+from servicos.postegre import Postgre
 
 # Configuração do banco de dados
-db = PostgresqlDatabase(
-    DATABASE['name'],
-    user=DATABASE['user'],
-    password=DATABASE['password'],
-    host=DATABASE['host'],
-    port=DATABASE['port']
-)
+db = Postgre.get_database()
 
 class Extensao(Model):
     id = AutoField(primary_key=True)

@@ -1,21 +1,15 @@
 # app/models/taskModel.py
 
 from typing import Optional
-from peewee import Model, CharField, PostgresqlDatabase, AutoField, DateField
+from peewee import Model, CharField, AutoField, DateField
 from psycopg2 import IntegrityError
-from config import DATABASE
 from dtos.requests.ProcessoSeletivo.CreateProcessoSeletivoRequest import CreateProcessoSeletivoRequest
 from dtos.responses.PaginacaoResponse import PaginacaoResponse
 from dtos.responses.ProcessoSeletivoResponse import ProcessoSeletivoResponse
+from servicos.postegre import Postgre
 
 # Configuração do banco de dados
-db = PostgresqlDatabase(
-    DATABASE['name'],
-    user=DATABASE['user'],
-    password=DATABASE['password'],
-    host=DATABASE['host'],
-    port=DATABASE['port']
-)
+db = Postgre.get_database()
 
 class ProcessoSeletivo(Model):
     id = AutoField(primary_key=True)

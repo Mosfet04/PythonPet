@@ -1,16 +1,10 @@
 # app/models/taskModel.py
 
-from peewee import Model, CharField, PostgresqlDatabase, AutoField
-from config import DATABASE
+from peewee import Model, CharField, AutoField
+from servicos.postegre import Postgre
 
 # Configuração do banco de dados
-db = PostgresqlDatabase(
-    DATABASE['name'],
-    user=DATABASE['user'],
-    password=DATABASE['password'],
-    host=DATABASE['host'],
-    port=DATABASE['port']
-)
+db = Postgre.get_database()
 
 class NoticiasCategoria(Model):
     id = AutoField(primary_key=True)

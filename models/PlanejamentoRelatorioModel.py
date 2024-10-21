@@ -1,21 +1,15 @@
 # app/models/taskModel.py
 
 from typing import Optional
-from peewee import Model, CharField, PostgresqlDatabase, AutoField, DateField, IntegerField
+from peewee import Model, CharField, AutoField, DateField, IntegerField
 from psycopg2 import IntegrityError
-from config import DATABASE
 from dtos.requests.PlanejamentoRelatorio.CreatePlanejamentoRelatorioRequest import CreatePlanejamentoRelatorioRequest
 from dtos.responses.PlanejamentoRelatorioResponse import PlanejamentoRelatorioResponse
 from dtos.responses.PaginacaoResponse import PaginacaoResponse
+from servicos.postegre import Postgre
 
 # Configuração do banco de dados
-db = PostgresqlDatabase(
-    DATABASE['name'],
-    user=DATABASE['user'],
-    password=DATABASE['password'],
-    host=DATABASE['host'],
-    port=DATABASE['port']
-)
+db = Postgre.get_database()
 
 class PlanejamentoRelatorio(Model):
     id = AutoField(primary_key=True)

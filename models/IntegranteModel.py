@@ -2,21 +2,15 @@
 
 from datetime import date
 from typing import Optional
-from peewee import Model, CharField, DateField, TextField, PostgresqlDatabase, ForeignKeyField, IntegrityError, DoesNotExist, OperationalError
-from config import DATABASE
+from peewee import Model, CharField, DateField, TextField, ForeignKeyField, IntegrityError, DoesNotExist, OperationalError
 from dtos.requests.Integrante.UpdateIntegranteRequest import UpdateIntegranteRequest
 from dtos.responses.IntegranteResponse import IntegranteResponse
+from servicos.postegre import Postgre
 from .SetorModel import Setor
 from dtos.responses.PaginacaoResponse import PaginacaoResponse
 
 # Configuração do banco de dados
-db = PostgresqlDatabase(
-    DATABASE['name'],
-    user=DATABASE['user'],
-    password=DATABASE['password'],
-    host=DATABASE['host'],
-    port=DATABASE['port']
-)
+db = Postgre.get_database()
 
 class Integrante(Model):
     """

@@ -1,22 +1,16 @@
 # app/models/taskModel.py
 
 from typing import Optional
-from peewee import Model, CharField, PostgresqlDatabase, AutoField, BooleanField, TextField
+from peewee import Model, CharField, AutoField, BooleanField, TextField
 from psycopg2 import IntegrityError
 from dtos.requests.Pesquisa.CreatePesquisaRequest import CreatePesquisaRequest
 from dtos.requests.Pesquisa.UpdatePesquisaRequest import UpdatePesquisaRequest
 from dtos.responses.PesquisaResponse import PesquisaResponse
-from config import DATABASE
 from dtos.responses.PaginacaoResponse import PaginacaoResponse
+from servicos.postegre import Postgre
 
 # Configuração do banco de dados
-db = PostgresqlDatabase(
-    DATABASE['name'],
-    user=DATABASE['user'],
-    password=DATABASE['password'],
-    host=DATABASE['host'],
-    port=DATABASE['port']
-)
+db = Postgre.get_database()
 
 class Pesquisa(Model):
     id = AutoField(primary_key=True)

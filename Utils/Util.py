@@ -1,10 +1,17 @@
 from functools import wraps
 from flask import jsonify, request
-import requests
 import yaml
 from pydantic import BaseModel
 
+from servicos.microsoftGraph import MicrosoftGraph
+
 class Util(BaseModel):
+    # Constantes para mensagens de erro
+    TOKEN_MISSING = {'message': 'Token is missing!'}
+    TOKEN_INVALID = {'message': 'Token is missing or invalid!'}
+    TOKEN_ERROR = 'Token is invalid! Error: {}'
+    DOMAIN = "AVLMascaras.onmicrosoft.com"
+
     @staticmethod
     def read_yaml(file_path: str) -> dict:
         with open(file_path, 'r') as file:
@@ -21,23 +28,31 @@ class Util(BaseModel):
     def token_required(f):
         @wraps(f)
         def decorated(*args, **kwargs):
-            if 'Authorization' in request.headers:
-                parts = request.headers['Authorization'].split(" ")
-                if len(parts) != 2 or parts[0] != "Bearer":
-                    return jsonify({'message': 'Token is missing or invalid!'}), 401
+            # Verifica se o cabeçalho Authorization está presente
+            if 'Authorization' not in request.headers:
+                return jsonify(Util.TOKEN_MISSING), 401
+
+            # Divide o token em partes e verifica se está no formato correto
+            parts = request.headers['Authorization'].split(" ")
+            if len(parts) != 2 or parts[0] != "Bearer":
+                return jsonify(Util.TOKEN_INVALID), 401
 
             try:
-                graph_url = 'https://graph.microsoft.com/v1.0/me'
-                headers = {'Authorization': request.headers['Authorization']}
-                graph_response = requests.get(graph_url, headers=headers)
-                if graph_response.status_code != 200:
-                    return jsonify({'message': 'Failed to call Microsoft Graph API', 'error': graph_response.json()}), graph_response.status_code
+                token = request.headers['Authorization']
+                response, status_code = MicrosoftGraph.call_graph_api(token)
+                
+                # Verifica se a chamada à API do Microsoft Graph foi bem-sucedida
+                if status_code != 200:
+                    return jsonify(response), status_code
+                
+                request.graph_response = response
+                
+                # Verifica se o userPrincipalName está presente e contém o domínio esperado
+                if 'userPrincipalName' not in request.graph_response or Util.DOMAIN not in request.graph_response['userPrincipalName']:
+                    return jsonify(Util.TOKEN_INVALID), 401
             except Exception as e:
-                return jsonify({'message': f'Token is invalid! Error: {str(e)}'}), 401
-            
-            request.graph_response = graph_response.json()
-            if 'userPrincipalName' not in request.graph_response or "AVLMascaras.onmicrosoft.com" not in request.graph_response['userPrincipalName']:
-                return jsonify({'message': 'Token is invalid!'}), 401
+                return jsonify({'message': Util.TOKEN_ERROR.format(str(e))}), 401
+
             return f(*args, **kwargs)
 
         return decorated
