@@ -5,7 +5,7 @@ from pydantic import BaseModel
 
 from servicos.microsoftGraph import MicrosoftGraph
 
-class Util(BaseModel):
+class Util():
     # Constantes para mensagens de erro
     TOKEN_MISSING = {'message': 'Token is missing!'}
     TOKEN_INVALID = {'message': 'Token is missing or invalid!'}

@@ -76,6 +76,18 @@ GetIntegrantes:
       enum: [true, false]
       description: Lista somente membros ativos
       example: true
+    - name: page
+      in: query
+      required: false
+      type: integer
+      description: A página a ser listada
+      example: 1
+    - name: qtd_pagina
+      in: query
+      required: false
+      type: integer
+      description: A quantidade de itens por página
+      example: 10
   responses:
     200:
       description: Lista os integrantes

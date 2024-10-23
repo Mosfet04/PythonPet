@@ -19,11 +19,11 @@ def create_integrante(request: CreateIntegranteRequest) -> IntegranteResponse:
     return Integrante.criarIntegrante(request.nome, request.matricula, request.email, request.linkSelfie, request.setorId)
 
 
-def list_integrantes(ativo) -> list[IntegranteResponse]:
+def list_integrantes(ativo, page, per_page) -> list[IntegranteResponse]:
     """
     Função para listar todos os integrantes do banco de dados.
     """
-    response = Integrante.listarIntegrantes(ativo)
+    response = Integrante.listarIntegrantes(ativo, page, per_page)
     return response.to_dict()
 
 def update_integrante(request: UpdateIntegranteRequest, idIntegrante: bool) -> IntegranteResponse:
