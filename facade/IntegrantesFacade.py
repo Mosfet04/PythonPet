@@ -63,7 +63,6 @@ def delete_integrantes(idIntegrante):
       security:
         - Bearer: []
     """
-    matricula = request.args.get("matricula", default=None, type=str)
     integrantes = remove_integrante(idIntegrante, matricula)
     
     return jsonify(integrantes)

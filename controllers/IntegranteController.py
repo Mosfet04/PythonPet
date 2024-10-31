@@ -43,13 +43,5 @@ def remove_integrante(idIntegrante: int, matricula: str) -> bool:
     """
     Função para deletar um integrante.
     """
-    # Verifica se o integrante existe na base de dados
-    integrante : Integrante = Integrante.encontrarIntegrante(None, idIntegrante)
-    
-    if not integrante:
-        raise IntegrityError("Integrante não encontrado, verifique o ID do integrante")
-    if integrante.matricula != matricula:
-        raise IntegrityError("Matrícula inválida")
-
     # Deleta o integrante
     return integrante.deletarIntegrante()

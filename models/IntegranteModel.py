@@ -75,7 +75,7 @@ class Integrante(Model):
 
             if NonPaginated:
                 return query.first()
-            
+            query = query.order_by(Integrante.dataIngresso)
             query = query.paginate(page, per_page)
             listaIntegrantes = query.execute()
 

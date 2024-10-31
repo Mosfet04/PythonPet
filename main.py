@@ -21,9 +21,10 @@ from models.ProgramacaoJorneqModel import ProgramacaoJorneq
 from models.PesquisaModel import Pesquisa
 from models.ExtensaoModel import Extensao
 from flasgger import Swagger
+from flask_cors import CORS
 
 app = Flask(__name__)
-
+cors = CORS(app, resources={r"/api/*": {"origins": "*", "allow_headers": ["Authorization", "Content-Type"], "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"]}})
 # Configura o banco de dados
 db = get_database()
 

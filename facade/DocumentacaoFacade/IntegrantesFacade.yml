@@ -176,12 +176,6 @@ DeleteIntegrante:
       type: integer
       description: O ID do integrante
       example: 1
-    - name: matricula
-      in: query
-      required: true
-      type: string
-      description: A matrícula do integrante
-      example: 2019000000
   responses:
     200:
       description: Integrante removido com sucesso
