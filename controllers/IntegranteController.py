@@ -39,9 +39,15 @@ def update_integrante(request: UpdateIntegranteRequest, idIntegrante: bool) -> I
     # Atualiza os dados do integrante
     return integrante.atualizarIntegrante(request)
 
-def remove_integrante(idIntegrante: int, matricula: str) -> bool:
+def remove_integrante(idIntegrante: int) -> bool:
     """
     Função para deletar um integrante.
     """
+    # Verifica se o integrante existe na base de dados
+    integrante : Integrante = Integrante.encontrarIntegrante(None, idIntegrante)
+    
+    if not integrante:
+        raise IntegrityError("Integrante não encontrado, verifique o ID do integrante")
+
     # Deleta o integrante
     return integrante.deletarIntegrante()
