@@ -38,7 +38,7 @@ class Pesquisa(Model):
             return None
         
     @staticmethod
-    def listarPesquisas(ativos: bool, 
+    def listarPesquisas(ativos: Optional[bool], 
         page: int = 1, 
         per_page: int = 10, 
         idPesquisa: Optional[int] = None) -> PaginacaoResponse[PesquisaResponse]:
@@ -46,13 +46,13 @@ class Pesquisa(Model):
             query = Pesquisa.select()
             if ativos:
                 query = query.where(Pesquisa.ativo == True)
-            else:
+            elif ativos == False:
                 query = query.where(Pesquisa.ativo == False)
             
             if idPesquisa:
                 return query.where(Pesquisa.id == idPesquisa).first()
             
-            
+            query = query.order_by(Pesquisa.id.desc())
             total_items = query.count()
             total_pages = (total_items +per_page - 1) // per_page
 

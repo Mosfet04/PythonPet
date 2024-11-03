@@ -30,16 +30,19 @@ def get_minicursos():
     """
     Lista todas as pesquisas coletivas
     """
-    ativo = request.args.get("ativo", type=str)
-    ativo_bool = Util.str_to_bool(ativo)
-    pesquisa = list_pesquisas(ativo_bool)
+    ativo = request.args.get("ativo")
+    page = request.args.get("page", default=1, type=int)
+    per_page = request.args.get("per_page", default=10, type=int)
+    if(ativo != None):
+      ativo = Util.str_to_bool(ativo)
+    pesquisa = list_pesquisas(ativo, page, per_page)
     
     return jsonify(pesquisa)
 
-@pesquisa_bp.route("/pesquisa/<string:matricula>", methods=["POST"])
+@pesquisa_bp.route("/pesquisa/<int:idPesquisa>", methods=["POST"])
 @swag_from(documentacao.get('UpdatePesquisa'))
 @Util.token_required
-def post_minicursos(matricula):
+def post_minicursos(idPesquisa):
       """
       Atualiza as informações de uma pesquisa coletiva
       ---
@@ -47,8 +50,9 @@ def post_minicursos(matricula):
             - Bearer: []
       """
       data = request.get_json()
+      data["ativo"] = Util.str_to_bool(data["ativo"])
       request_obj = UpdatePesquisaRequest(**data)
-      pesquisa = update_pesquisas(request_obj, matricula)
+      pesquisa = update_pesquisas(request_obj, idPesquisa)
       
       return jsonify(pesquisa)
 
@@ -62,7 +66,6 @@ def delete_minicurso(idPesquisa):
       security:
         - Bearer: []
     """
-    matricula = request.args.get("matricula", default=None, type=str)
-    pesquisa = remove_pesquisa(idPesquisa, matricula)
+    pesquisa = remove_pesquisa(idPesquisa)
     
     return jsonify(pesquisa)

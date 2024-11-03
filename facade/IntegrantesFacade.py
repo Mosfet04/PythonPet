@@ -32,8 +32,8 @@ def get_integrantes():
     Lista todas os integrantes
     """
     ativo = request.args.get("ativo", default=False, type=bool)
-    page = request.args.get("pagina", default=1, type=int)
-    per_page = request.args.get("qtd_pagina", default=10, type=int)
+    page = request.args.get("page", default=1, type=int)
+    per_page = request.args.get("per_page", default=10, type=int)
     integrantes = list_integrantes(ativo, page, per_page)
     
     return jsonify(integrantes)

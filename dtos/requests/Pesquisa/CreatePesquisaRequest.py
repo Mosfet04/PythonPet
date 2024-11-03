@@ -1,5 +1,6 @@
 # app/dtos/requests/createIntegranteRequest.py
 
+from typing import Optional
 from pydantic import BaseModel
 
 class CreatePesquisaRequest(BaseModel):
@@ -8,5 +9,4 @@ class CreatePesquisaRequest(BaseModel):
     """
     nome: str
     descricao: str
-    ativo: bool
-    matricula: str
+    ativo: Optional[bool]
