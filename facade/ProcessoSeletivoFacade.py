@@ -35,7 +35,7 @@ def get_processoSeletivo():
     
     return jsonify(response)
       
-@processoSeletivo_bp.route("/pprocesso_seletivo/<int:idDocumento>", methods=["DELETE"])
+@processoSeletivo_bp.route("/processo_seletivo/<int:idDocumento>", methods=["DELETE"])
 @swag_from(documentacao.get('DeleteProcessoSeletivo'))
 @Util.token_required
 def delete_processoSeletivo(idDocumento):
@@ -45,7 +45,6 @@ def delete_processoSeletivo(idDocumento):
     security:
       - Bearer: []
     """
-    matricula = request.args.get("matricula", default=None, type=str)
-    integrantes = remove_processoSeletivo(idDocumento, matricula)
+    processoSeletivo = remove_processoSeletivo(idDocumento)
     
-    return jsonify(integrantes)
+    return jsonify(processoSeletivo)

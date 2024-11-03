@@ -11,4 +11,3 @@ class CreateProcessoSeletivoRequest(BaseModel):
     link: str
     titulo: str
     dataEdital: date
-    matricula: str
