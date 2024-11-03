@@ -11,4 +11,3 @@ class CreatePlanejamentoRelatorioRequest(BaseModel):
     link: str
     anoDocumento: date
     tipoDocumento:str
-    matriculaResponsavel: str

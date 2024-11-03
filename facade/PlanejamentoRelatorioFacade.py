@@ -29,7 +29,9 @@ def get_integrantes():
     """
     Lista todos os planejamentos e relatórios
     """
-    response = list_planejamentoRelatorio()
+    page = request.args.get("pagina", default=1, type=int)
+    per_page = request.args.get("qtd_pagina", default=10, type=int)
+    response = list_planejamentoRelatorio(page, per_page)
     
     return jsonify(response)
       
@@ -43,7 +45,6 @@ def delete_integrantes(idDocumento):
     security:
       - Bearer: []
     """
-    matricula = request.args.get("matricula", default=None, type=str)
-    integrantes = remove_planejamentoRelatorio(idDocumento, matricula)
+    integrantes = remove_planejamentoRelatorio(idDocumento)
     
     return jsonify(integrantes)

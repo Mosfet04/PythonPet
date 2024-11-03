@@ -47,6 +47,7 @@ class PlanejamentoRelatorio(Model):
 
     @staticmethod
     def listarPlanejamentoRelatorio(
+        page: int = 1,
         per_page: int = 10, 
         idDocumento: Optional[int] = None,
         NonPaginated: Optional[bool] = False
@@ -55,49 +56,56 @@ class PlanejamentoRelatorio(Model):
         Lista notícias com base nos filtros fornecidos.
         """
         try:
-
             if idDocumento:
                 response = PlanejamentoRelatorio.get_by_id(idDocumento)
                 return response
 
+            # Calcula o número de registros por tipo
+            per_type = per_page // 2
 
-            response :list[PlanejamentoRelatorioResponse] = []
-            planejamentoRelatorio1 = PlanejamentoRelatorio.select().where(PlanejamentoRelatorio.tipo == 1).order_by(PlanejamentoRelatorio.dataDocumento).limit(per_page // 2)
-            planejamentoRelatorio2 = PlanejamentoRelatorio.select().where(PlanejamentoRelatorio.tipo == 2).order_by(PlanejamentoRelatorio.dataDocumento).limit(per_page // 2)
+            # Consulta para buscar registros do tipo 1
+            planejamento = PlanejamentoRelatorio.select().where(PlanejamentoRelatorio.tipo == 1).order_by(PlanejamentoRelatorio.dataDocumento).paginate(page, per_type)
+            # Consulta para buscar registros do tipo 2
+            relatorio = PlanejamentoRelatorio.select().where(PlanejamentoRelatorio.tipo == 2).order_by(PlanejamentoRelatorio.dataDocumento).paginate(page, per_type)
 
-            for pr in planejamentoRelatorio1:
+            response = []
+
+            for pr in planejamento:
                 response.append(PlanejamentoRelatorioResponse(
                     id=pr.id,
                     link=pr.link,
                     anoDocumento=pr.dataDocumento,
-                    tipo="planejamento" if pr.tipo == 1 else "relatorio"
+                    tipo="planejamento" 
                 ))
 
-            for pr in planejamentoRelatorio2:
+            for pr in relatorio:
                 response.append(PlanejamentoRelatorioResponse(
                     id=pr.id,
                     link=pr.link,
                     anoDocumento=pr.dataDocumento,
-                    tipo="planejamento" if pr.tipo == 1 else "relatorio"
+                    tipo="relatorio"
                 ))
 
             if NonPaginated:
                 return response
-            
+
+            total_items = PlanejamentoRelatorio.select().count()
+            total_pages = (total_items + per_page - 1) // per_page
+
             response_list = [
                 PlanejamentoRelatorioResponse(
                     id=planejamentoRelatorio.id,
                     link=planejamentoRelatorio.link,
                     anoDocumento=planejamentoRelatorio.anoDocumento,
-                    tipo = "planejamento" if planejamentoRelatorio.tipo == 1 else "relatorio"
+                    tipo=planejamentoRelatorio.tipo
                 ).dict() for planejamentoRelatorio in response
             ]
 
             return PaginacaoResponse(
-                hasNextPage=True,
-                page=1,
-                totalPage=None,
-                qtdItens=per_page,
+                hasNextPage=page < total_pages,
+                page=page,
+                totalPage=total_pages,
+                qtdItens=total_items,
                 items=response_list
             )
         except Exception as e:
