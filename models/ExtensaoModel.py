@@ -57,7 +57,8 @@ class Extensao(Model):
             
             if idExtensao:
                 return query.where(Extensao.id == idExtensao).first()
-            else:
+            
+            if tipo:
                 query = query.where(Extensao.tipo == tipo.value)
             
             total_items = query.count()

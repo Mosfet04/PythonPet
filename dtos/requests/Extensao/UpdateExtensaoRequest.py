@@ -9,9 +9,7 @@ class UpdateExtensaoRequest(BaseModel):
     """
     Objeto de request para atualização das pesquisas coletivas.
     """
-    id: int
     nome: str
     descricao: str
     tipo: ExtensaoTipo
     ativo: bool
-    matricula: str

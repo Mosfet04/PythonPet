@@ -31,17 +31,22 @@ def get_extensao():
     """
     Lista as extensões
     """
-    ativo = request.args.get("ativo", type=str)
-    tipo = ExtensaoTipo(request.args.get("tipo", type=int))
-    ativo_bool = Util.str_to_bool(ativo)
-    extensao = list_extensao(ativo_bool, tipo)
+    ativo = request.args.get("ativo")
+    tipo = request.args.get("tipo")
+    if (tipo != None):
+      tipo = ExtensaoTipo(tipo)
+    if (ativo != None):
+      ativo = Util.str_to_bool(ativo)
+    page = request.args.get("page", default=1, type=int)
+    per_page = request.args.get("per_page", default=10, type=int)
+    extensao = list_extensao(ativo, tipo, page, per_page)
     
     return jsonify(extensao)
 
-@extensao_bp.route("/extensao/<string:matricula>", methods=["POST"])
+@extensao_bp.route("/extensao/<int:idConteudo>", methods=["POST"])
 @swag_from(documentacao.get('UpdateExtensao'))
 @Util.token_required
-def post_extensao(matricula):
+def post_extensao(idConteudo):
       """
       Atualiza as informações de uma extensão
       ---
@@ -50,7 +55,7 @@ def post_extensao(matricula):
       """
       data = request.get_json()
       request_obj = UpdateExtensaoRequest(**data)
-      extensao = update_extensao(request_obj, matricula)
+      extensao = update_extensao(request_obj, idConteudo)
       
       return jsonify(extensao)
 
@@ -64,7 +69,6 @@ def delete_extensao(idExtensao):
       security:
         - Bearer: []
     """
-    matricula = request.args.get("matricula", default=None, type=str)
-    extensao = remove_extensao(idExtensao, matricula)
+    extensao = remove_extensao(idExtensao)
     
     return jsonify(extensao)

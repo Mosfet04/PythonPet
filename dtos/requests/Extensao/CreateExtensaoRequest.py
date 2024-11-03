@@ -12,4 +12,3 @@ class CreateExtensaoRequest(BaseModel):
     descricao: str
     tipo: ExtensaoTipo
     ativo: bool
-    matricula: str
