@@ -161,12 +161,6 @@ DeleteMinicurso:
       type: integer
       description: O ID do minicurso a ser removido
       example: 1
-    - name: matricula
-      in: query
-      required: true
-      type: string
-      description: A matrícula do integrante
-      example: 2019000000
   responses:
     200:
       description: Minicurso removido com sucesso

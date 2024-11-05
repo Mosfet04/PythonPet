@@ -30,15 +30,19 @@ def get_minicursos():
     """
     Lista todos os mini-cursos
     """
-    ativo = request.args.get("ativo", default=False, type=bool)
-    minicursos = list_minicursos(ativo)
+    ativo = request.args.get("ativo")
+    page = request.args.get("page", default=1, type=int)
+    per_page = request.args.get("per_page", default=10, type=int)
+    if(ativo != None):
+      ativo = Util.str_to_bool(ativo)
+    minicursos = list_minicursos(ativo, page, per_page)
     
     return jsonify(minicursos)
 
-@minicursos_bp.route("/mini_cursos/<string:matricula>", methods=["POST"])
+@minicursos_bp.route("/mini_cursos/<int:idConteudo>", methods=["POST"])
 @swag_from(documentacao.get('UpdateMinicurso'))
 @Util.token_required
-def post_minicursos(matricula):
+def post_minicursos(idConteudo):
       """
       Atualiza as informações de um mini-curso
       ---
@@ -47,11 +51,11 @@ def post_minicursos(matricula):
       """
       data = request.get_json()
       request_obj = UpdateMinicursosRequest(**data)
-      minicurso = update_minicursos(request_obj, matricula)
+      minicurso = update_minicursos(request_obj, idConteudo)
       
       return jsonify(minicurso)
 
-@minicursos_bp.route("/mini-cursos/<int:idMinicurso>", methods=["DELETE"])
+@minicursos_bp.route("/mini_cursos/<int:idMinicurso>", methods=["DELETE"])
 @swag_from(documentacao.get('DeleteMinicurso'))
 @Util.token_required
 def delete_minicurso(idMinicurso):
@@ -61,7 +65,6 @@ def delete_minicurso(idMinicurso):
       security:
         - Bearer: []
     """
-    matricula = request.args.get("matricula", default=None, type=str)
-    minicurso = remove_minicurso(idMinicurso, matricula)
+    minicurso = remove_minicurso(idMinicurso)
     
     return jsonify(minicurso)

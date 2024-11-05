@@ -41,14 +41,16 @@ class MiniCursos(Model):
             return None
         
     @staticmethod
-    def listarMiniCursos(ativos: bool, 
+    def listarMiniCursos(ativos: Optional[bool], 
         page: int = 1, 
         per_page: int = 10, 
         idMiniCurso: Optional[int] = None) -> PaginacaoResponse[MinicursosResponse]:
         try:
             query = MiniCursos.select()
-            if ativos:
+            if ativos == True:
                 query = query.where(MiniCursos.ativo == True)
+            elif ativos == False:
+                query = query.where(MiniCursos.ativo == False)
             
             if idMiniCurso:
                 return query.where(MiniCursos.id == idMiniCurso).first()

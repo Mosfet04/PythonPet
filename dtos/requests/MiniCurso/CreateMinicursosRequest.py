@@ -12,4 +12,3 @@ class CreateMinicursosRequest(BaseModel):
     descricao: str
     imagem: str
     ativo: bool
-    matricula: str
