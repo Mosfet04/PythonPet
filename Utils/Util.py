@@ -10,7 +10,7 @@ class Util():
     TOKEN_MISSING = {'message': 'Token is missing!'}
     TOKEN_INVALID = {'message': 'Token is missing or invalid!'}
     TOKEN_ERROR = 'Token is invalid! Error: {}'
-    DOMAIN = "AVLMascaras.onmicrosoft.com"
+    DOMAIN = "ufupeteqoutlook.onmicrosoft.com"
 
     @staticmethod
     def read_yaml(file_path: str) -> dict:

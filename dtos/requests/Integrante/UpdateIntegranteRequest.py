@@ -11,7 +11,7 @@ class UpdateIntegranteRequest(BaseModel):
     nome: str
     matricula: str
     email: str
-    dataIngresso: date = date.today()  # Define a data de ingresso como a data atual
+    dataIngresso: date  # Define a data de ingresso como a data atual
     desligamento: bool = False  # Deixa a data de desligamento como nula (None)
     linkSelfie: str
     linkedin: str

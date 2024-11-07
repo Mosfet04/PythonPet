@@ -130,6 +130,7 @@ class Integrante(Model):
                 email=self.email,
                 dataIngresso=str(self.dataIngresso),
                 linkSelfie=self.linkSelfie,
+                linkedin=self.linkedin,
                 setorNome=self.setor.nome
             ).dict()
         except IntegrityError as e:
