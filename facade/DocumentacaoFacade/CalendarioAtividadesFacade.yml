@@ -1,0 +1,185 @@
+AddCalendarioAtividades:
+  tags:
+    - CalendarioAtividades
+  summary: Cria uma nova atividade no calendário
+  description: Cria uma nova atividade no calendário
+  operationId: add_calendarioAtividades
+  security:
+    - Bearer: []
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '#/components/schemas/CreateCalendarioAtividadesRequest'
+  responses:
+    '200':
+      description: Atividade criada com sucesso
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CalendarioAtividadesResponse'
+    '401':
+      description: Token inválido ou ausente
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Token is missing or invalid!
+
+GetCalendarioAtividades:
+  tags:
+    - CalendarioAtividades
+  summary: Lista todas as atividades do calendário
+  description: Lista todas as atividades do calendário
+  operationId: get_calendarioAtividadess
+  parameters:
+    - name: ativo
+      in: query
+      required: false
+      schema:
+        type: boolean
+      description: Filtra atividades ativas
+    - name: page
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 1
+      description: Número da página
+    - name: per_page
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 10
+      description: Número de itens por página
+  responses:
+    '200':
+      description: Lista de atividades do calendário
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/CalendarioAtividadesResponse'
+
+UpdateCalendarioAtividades:
+  tags:
+    - CalendarioAtividades
+  summary: Atualiza as informações de uma atividade do calendário
+  description: Atualiza as informações de uma atividade do calendário
+  operationId: post_calendarioAtividadess
+  security:
+    - Bearer: []
+  parameters:
+    - name: idAtividade
+      in: path
+      required: true
+      schema:
+        type: integer
+      description: ID da atividade a ser atualizada
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '#/components/schemas/UpdateCalendarioAtividadesRequest'
+  responses:
+    '200':
+      description: Atividade atualizada com sucesso
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CalendarioAtividadesResponse'
+    '401':
+      description: Token inválido ou ausente
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Token is missing or invalid!
+
+DeleteCalendarioAtividades:
+  tags:
+    - CalendarioAtividades
+  summary: Remove uma atividade cadastrada no calendário
+  description: Remove uma atividade cadastrada no calendário
+  operationId: delete_calendarioAtividades
+  security:
+    - Bearer: []
+  parameters:
+    - name: idAtividade
+      in: path
+      required: true
+      schema:
+        type: integer
+      description: ID da atividade a ser removida
+  responses:
+    '200':
+      description: Atividade removida com sucesso
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Atividade removida com sucesso
+    '401':
+      description: Token inválido ou ausente
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Token is missing or invalid!
+
+components:
+  schemas:
+    CreateCalendarioAtividadesRequest:
+      type: object
+      properties:
+        nome:
+          type: string
+        descricao:
+          type: string
+        data:
+          type: string
+          format: date
+        ativo:
+          type: boolean
+    UpdateCalendarioAtividadesRequest:
+      type: object
+      properties:
+        nome:
+          type: string
+        descricao:
+          type: string
+        data:
+          type: string
+          format: date
+        ativo:
+          type: boolean
+    CalendarioAtividadesResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+        nome:
+          type: string
+        descricao:
+          type: string
+        data:
+          type: string
+          format: date
+        ativo:
+          type: boolean

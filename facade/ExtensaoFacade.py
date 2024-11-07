@@ -34,7 +34,7 @@ def get_extensao():
     ativo = request.args.get("ativo")
     tipo = request.args.get("tipo")
     if (tipo != None):
-      tipo = ExtensaoTipo(tipo)
+      tipo = ExtensaoTipo(int(tipo))
     if (ativo != None):
       ativo = Util.str_to_bool(ativo)
     page = request.args.get("page", default=1, type=int)
