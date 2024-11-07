@@ -3,6 +3,7 @@
 from datetime import date
 from typing import Optional
 from peewee import Model, CharField, DateField, TextField, ForeignKeyField, IntegrityError, DoesNotExist, OperationalError
+from dtos.requests.Integrante.CreateIntegranteRequest import CreateIntegranteRequest
 from dtos.requests.Integrante.UpdateIntegranteRequest import UpdateIntegranteRequest
 from dtos.responses.IntegranteResponse import IntegranteResponse
 from servicos.postegre import Postgre
@@ -22,6 +23,7 @@ class Integrante(Model):
     dataIngresso = DateField()  
     dataDesligamento = DateField(null = True) 
     linkSelfie = TextField()
+    linkedin = TextField()
     setor = ForeignKeyField(Setor, backref="integrantes", null=True)  
 
     def encontrarIntegrante(matricula: str, idIntegrante: int):
@@ -37,16 +39,17 @@ class Integrante(Model):
             print(f"Erro ao encontrar integrante com matrícula {matricula}: {e}")
             return None
 
-    def criarIntegrante(nome: str, matricula: str, email: str, linkSelfie: str, setorId: int) -> IntegranteResponse:
+    def criarIntegrante(request : CreateIntegranteRequest) -> IntegranteResponse:
         try:
             integranteCriado = Integrante.create(
-                nome=nome,
-                dataDesligamento=None,
-                matricula=matricula,
-                email=email,
-                dataIngresso=date.today(),
-                linkSelfie=linkSelfie,
-                setor=setorId
+                nome=request.nome,
+                dataDesligamento=request.dataDesligamento,
+                matricula=request.matricula,
+                email=request.email,
+                dataIngresso=request.dataIngresso,
+                linkSelfie=request.linkSelfie,
+                setor=request.setorId,
+                linkedin=request.linkedin
             )
 
             return IntegranteResponse(
@@ -57,6 +60,7 @@ class Integrante(Model):
                 email=integranteCriado.email,
                 dataIngresso=str(integranteCriado.dataIngresso),
                 linkSelfie=integranteCriado.linkSelfie,
+                linkedin=integranteCriado.linkedin,
                 setorNome=integranteCriado.setor.nome
             ).dict()
         except IntegrityError as e:
@@ -77,6 +81,7 @@ class Integrante(Model):
                 return query.first()
             query = query.order_by(Integrante.dataIngresso)
             query = query.paginate(page, per_page)
+
             listaIntegrantes = query.execute()
 
             response_list = [
@@ -88,6 +93,7 @@ class Integrante(Model):
                     email=integrante.email,
                     dataIngresso=str(integrante.dataIngresso),
                     linkSelfie=integrante.linkSelfie,
+                    linkedin=integrante.linkedin,
                     setorNome=integrante.setor.nome
                 ).dict() for integrante in listaIntegrantes
             ]
@@ -111,6 +117,7 @@ class Integrante(Model):
             self.dataIngresso = request.dataIngresso
             self.dataDesligamento = date.today() if request.desligamento else None
             self.linkSelfie = request.linkSelfie
+            self.linkedin = request.linkedin
             self.setor = request.setorId
 
             self.save()

@@ -11,7 +11,8 @@ class CreateIntegranteRequest(BaseModel):
     nome: str
     matricula: str
     email: str
-    dataIngresso: date = date.today()  # Define a data de ingresso como a data atual
-    dataDesligamento: date = None  # Deixa a data de desligamento como nula (None)
+    dataIngresso: date  
+    dataDesligamento: date
     linkSelfie: str
+    linkedin: str
     setorId: int

@@ -14,4 +14,5 @@ class UpdateIntegranteRequest(BaseModel):
     dataIngresso: date = date.today()  # Define a data de ingresso como a data atual
     desligamento: bool = False  # Deixa a data de desligamento como nula (None)
     linkSelfie: str
+    linkedin: str
     setorId: int

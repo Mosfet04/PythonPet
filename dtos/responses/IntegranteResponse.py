@@ -14,4 +14,5 @@ class IntegranteResponse(BaseModel):
     dataIngresso: str
     dataDesligamento: Optional[str] 
     linkSelfie: str
+    linkedin: str
     setorNome: str

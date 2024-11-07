@@ -16,7 +16,7 @@ def create_integrante(request: CreateIntegranteRequest) -> IntegranteResponse:
         raise IntegrityError("Integrante já cadastrado")
 
     # Cria um novo integrante no banco de dados
-    return Integrante.criarIntegrante(request.nome, request.matricula, request.email, request.linkSelfie, request.setorId)
+    return Integrante.criarIntegrante(request)
 
 
 def list_integrantes(ativo, page, per_page) -> list[IntegranteResponse]:
