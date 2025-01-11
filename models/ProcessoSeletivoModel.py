@@ -7,7 +7,7 @@ from dtos.requests.ProcessoSeletivo.CreateProcessoSeletivoRequest import CreateP
 from dtos.responses.PaginacaoResponse import PaginacaoResponse
 from dtos.responses.ProcessoSeletivoResponse import ProcessoSeletivoResponse
 from servicos.postegre import Postgre
-
+from flask import abort
 # Configuração do banco de dados
 db = Postgre.get_database()
 
@@ -38,8 +38,8 @@ class ProcessoSeletivo(Model):
             ).dict()
 
         except IntegrityError as e:
-            print(f"Erro ao salvar documento: {e}")
-            return None
+            print(f"Erro ao salvar processo seletivo: {e}")
+            abort(500, description=f"Erro ao salvar processo seletivo: {e}")
 
     @staticmethod
     def listarProcessoSeletivo(
@@ -94,6 +94,6 @@ class ProcessoSeletivo(Model):
             return True
         except IntegrityError as e:
             print(f"Erro ao deletar processo seletivo: {e}")
-            return False
+            abort(500, description=f"Erro ao deletar processo seletivo: {e}")
     class Meta:
         database = db

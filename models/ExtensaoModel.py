@@ -9,6 +9,7 @@ from dtos.requests.Extensao.UpdateExtensaoRequest import UpdateExtensaoRequest
 from dtos.responses.ExtensaoResponse import ExtensaoResponse
 from dtos.responses.PaginacaoResponse import PaginacaoResponse
 from servicos.postegre import Postgre
+from flask import abort
 
 # Configuração do banco de dados
 db = Postgre.get_database()
@@ -39,7 +40,7 @@ class Extensao(Model):
             ).dict()
         except IntegrityError as e:
             print(f"Erro ao criar extensao: {e}")
-            return None
+            abort(500, description=f"Erro ao criar extensao: {e}")
         
     @staticmethod
     def listarExtensao( 
@@ -106,7 +107,7 @@ class Extensao(Model):
             ).dict()
         except IntegrityError as e:
             print(f"Erro ao atualizar extensao: {e}")
-            return None
+            abort(500, description=f"Erro ao atualizar extensao: {e}")
 
     def deletar(self):
         try:
@@ -114,7 +115,7 @@ class Extensao(Model):
             return True
         except IntegrityError as e:
             print(f"Erro ao deletar extensao: {e}")
-            return False
+            abort(500, description=f"Erro ao deletar extensao: {e}")
         
     class Meta:
         database = db

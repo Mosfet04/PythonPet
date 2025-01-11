@@ -7,6 +7,7 @@ from dtos.requests.PlanejamentoRelatorio.CreatePlanejamentoRelatorioRequest impo
 from dtos.responses.PlanejamentoRelatorioResponse import PlanejamentoRelatorioResponse
 from dtos.responses.PaginacaoResponse import PaginacaoResponse
 from servicos.postegre import Postgre
+from flask import abort
 
 # Configuração do banco de dados
 db = Postgre.get_database()
@@ -43,7 +44,7 @@ class PlanejamentoRelatorio(Model):
 
         except IntegrityError as e:
             print(f"Erro ao salvar documento: {e}")
-            return None
+            abort(500, description=f"Erro ao salvar documento: {e}")
 
     @staticmethod
     def listarPlanejamentoRelatorio(
@@ -118,6 +119,6 @@ class PlanejamentoRelatorio(Model):
             return True
         except IntegrityError as e:
             print(f"Erro ao deletar documento: {e}")
-            return False
+            abort(500, description=f"Erro ao deletar documento: {e}")
     class Meta:
         database = db

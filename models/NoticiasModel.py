@@ -12,7 +12,7 @@ from servicos.postegre import Postgre
 from .SetorModel import Setor
 from .IntegranteModel import Integrante
 from .NoticiasCategoriaModel import NoticiasCategoria
-
+from flask import abort
 # Configuração do banco de dados
 db = Postgre.get_database()
 
@@ -59,7 +59,7 @@ class Noticia(Model):
             ).dict()
         except IntegrityError as e:
             print(f"Erro ao criar notícia: {e}")
-            return None
+            abort(500, description=f"Erro ao criar notícia: {e}")
 
     @staticmethod
     def listarNoticias(
@@ -149,7 +149,7 @@ class Noticia(Model):
             ).dict()
         except IntegrityError as e:
             print(f"Erro ao atualizar notícia: {e}")
-            return None
+            abort(500, description=f"Erro ao atualizar notícia: {e}")
 
     def deletar(self):
         try:
@@ -157,7 +157,7 @@ class Noticia(Model):
             return True
         except IntegrityError as e:
             print(f"Erro ao deletar noticia: {e}")
-            return False
+            abort(500, description=f"Erro ao deletar notícia: {e}")
 
     class Meta:
         database = db

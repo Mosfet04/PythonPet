@@ -8,7 +8,7 @@ from dtos.requests.CalendarioAtividades.UpdateCalendarioAtividadesRequest import
 from dtos.responses.CalendarioAtividadesResponse import CalendarioAtividadesResponse
 from dtos.responses.PaginacaoResponse import PaginacaoResponse
 from servicos.postegre import Postgre
-
+from flask import abort
 # Configuração do banco de dados
 db = Postgre.get_database()
 
@@ -46,7 +46,7 @@ class CalendarioAtividades(Model):
 
         except IntegrityError as e:
             print(f"Erro ao salvar atividade: {e}")
-            return None
+            abort(500, description=f"Erro ao salvar atividade: {e}")
 
     @staticmethod
     def listarAtividades(
@@ -121,7 +121,7 @@ class CalendarioAtividades(Model):
             ).dict()
         except IntegrityError as e:
             print(f"Erro ao atualizar atividade: {e}")
-            return None
+            abort(500, description=f"Erro ao atualizar atividade: {e}")
 
     def deletar(self):
         try:
@@ -129,7 +129,7 @@ class CalendarioAtividades(Model):
             return True
         except IntegrityError as e:
             print(f"Erro ao deletar atividade: {e}")
-            return False
+            abort(500, description=f"Erro ao deletar atividade: {e}")
 
     class Meta:
         database = db

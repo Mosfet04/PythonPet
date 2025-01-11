@@ -9,6 +9,7 @@ from dtos.responses.IntegranteResponse import IntegranteResponse
 from servicos.postegre import Postgre
 from .SetorModel import Setor
 from dtos.responses.PaginacaoResponse import PaginacaoResponse
+from flask import abort
 
 # Configuração do banco de dados
 db = Postgre.get_database()
@@ -34,10 +35,10 @@ class Integrante(Model):
                 return Integrante.select().where(Integrante.matricula == matricula).first()
             else:
                 print(f"Erro ao encontrar integrante: matrícula e idIntegrante são nulos")
-                return None
+                abort(500, description=f"Parametros de matricula e id nulos na requisicao")
         except Exception as e:
             print(f"Erro ao encontrar integrante com matrícula {matricula}: {e}")
-            return None
+            abort(500, description=f"Erro ao encontrar integrante com matrícula {matricula}: {e}")
 
     def criarIntegrante(request : CreateIntegranteRequest) -> IntegranteResponse:
         try:
@@ -65,7 +66,7 @@ class Integrante(Model):
             ).dict()
         except IntegrityError as e:
             print(f"Erro ao criar integrante: {e}")
-            return None
+            abort(500, description=f"Erro ao criar integrante: {e}")
     
     def listarIntegrantes(ativos: bool, page: int = 1, per_page: int = 10, 
         NonPaginated: Optional[bool] = False) -> PaginacaoResponse[IntegranteResponse]:
@@ -135,7 +136,7 @@ class Integrante(Model):
             ).dict()
         except IntegrityError as e:
             print(f"Erro ao atualizar integrante: {e}")
-            return None
+            abort(500, description=f"Erro ao atualizar integrante: {e}")
 
     def deletarIntegrante(self):
         try:
@@ -143,6 +144,6 @@ class Integrante(Model):
             return True
         except IntegrityError as e:
             print(f"Erro ao deletar integrante: {e}")
-            return False
+            abort(500, description=f"Erro ao deletar integrante: {e}")
     class Meta:
         database = db

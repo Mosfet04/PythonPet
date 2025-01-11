@@ -8,7 +8,7 @@ from dtos.requests.MiniCurso.UpdateMinicursosRequest import UpdateMinicursosRequ
 from dtos.responses.MinicursosResponse import MinicursosResponse
 from dtos.responses.PaginacaoResponse import PaginacaoResponse
 from servicos.postegre import Postgre
-
+from flask import abort
 # Configuração do banco de dados
 db = Postgre.get_database()
 
@@ -38,7 +38,7 @@ class MiniCursos(Model):
             ).dict()
         except IntegrityError as e:
             print(f"Erro ao criar minicurso: {e}")
-            return None
+            abort(500, description=f"Erro ao criar minicurso: {e}")
         
     @staticmethod
     def listarMiniCursos(ativos: Optional[bool], 
@@ -101,7 +101,7 @@ class MiniCursos(Model):
             ).dict()
         except IntegrityError as e:
             print(f"Erro ao atualizar minicurso: {e}")
-            return None
+            abort(500, description=f"Erro ao atualizar minicurso: {e}")
 
     def deletar(self):
         try:
@@ -109,7 +109,7 @@ class MiniCursos(Model):
             return True
         except IntegrityError as e:
             print(f"Erro ao deletar minicurso: {e}")
-            return False
+            abort(500, description=f"Erro ao deletar minicurso: {e}")
 
     class Meta:
         database = db

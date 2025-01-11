@@ -8,7 +8,7 @@ from dtos.requests.Pesquisa.UpdatePesquisaRequest import UpdatePesquisaRequest
 from dtos.responses.PesquisaResponse import PesquisaResponse
 from dtos.responses.PaginacaoResponse import PaginacaoResponse
 from servicos.postegre import Postgre
-
+from flask import abort
 # Configuração do banco de dados
 db = Postgre.get_database()
 
@@ -35,7 +35,7 @@ class Pesquisa(Model):
             ).dict()
         except IntegrityError as e:
             print(f"Erro ao criar pesquisa coletiva: {e}")
-            return None
+            abort(500, description=f"Erro ao criar pesquisa coletiva: {e}")
         
     @staticmethod
     def listarPesquisas(ativos: Optional[bool], 
@@ -95,7 +95,7 @@ class Pesquisa(Model):
             ).dict()
         except IntegrityError as e:
             print(f"Erro ao atualizar pesquisa coletiva: {e}")
-            return None
+            abort(500, description=f"Erro ao atualizar pesquisa coletiva: {e}")
 
     def deletar(self):
         try:
@@ -103,7 +103,7 @@ class Pesquisa(Model):
             return True
         except IntegrityError as e:
             print(f"Erro ao deletar pesquisa coletiva: {e}")
-            return False
+            abort(500, description=f"Erro ao deletar pesquisa coletiva: {e}")
         
     class Meta:
         database = db
