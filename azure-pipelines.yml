@@ -1,0 +1,45 @@
+# Docker
+# Build a Docker image
+# https://docs.microsoft.com/azure/devops/pipelines/languages/docker
+
+trigger:
+- master
+
+resources:
+- repo: self
+
+variables:
+  tag: '$(Build.BuildId)'
+  DB_NAME: 'postgres'
+  DB_USER: 'petEqBack'
+  DB_PASSWORD: '6fJEvLVSDwI5'
+  DB_HOST: 'peteq.postgres.database.azure.com'
+  DB_PORT: '5432'
+  DB_SSL: 'true'
+
+stages:
+- stage: Build
+  displayName: Build image
+  jobs:
+  - job: Build
+    displayName: Build
+    pool:
+      vmImage: ubuntu-latest
+    steps:
+    - script: |
+        export DB_NAME=$(DB_NAME)
+        export DB_USER=$(DB_USER)
+        export DB_PASSWORD=$(DB_PASSWORD)
+        export DB_HOST=$(DB_HOST)
+        export DB_PORT=$(DB_PORT)
+        export DB_SSL=$(DB_SSL)
+        echo "Variaveis de ambiente setadas"
+      displayName: "Variaveis de ambiente setadas"
+    - task: Docker@2
+      displayName: Build an image
+      inputs:
+        command: build
+        dockerfile: '$(Build.SourcesDirectory)/Dockerfile'
+        tags: |
+          $(tag)
+  
