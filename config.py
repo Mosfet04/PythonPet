@@ -23,6 +23,8 @@ print(f"DB_PASSWORD: {os.getenv('DB_PASSWORD')}")
 print(f"DB_HOST: {os.getenv('DB_HOST')}")
 print(f"DB_PORT: {os.getenv('DB_PORT')}")
 print(f"DB_SSL: {os.getenv('DB_SSL')}")
+print(f"FIREBASE_PROJECT_ID: {os.getenv('FIREBASE_PROJECT_ID')}")
+print(f"FIREBASE_AUTH_DOMAIN: {os.getenv('FIREBASE_AUTH_DOMAIN')}")
 
 # Configurações do banco de dados
 DATABASE = {
@@ -57,3 +59,19 @@ def get_database():
 # Outras configurações globais
 DEBUG = True
 SECRET_KEY = os.urandom(24)
+
+# Configurações do Firebase
+FIREBASE_CONFIG = {
+    'apiKey': get_env_variable('FIREBASE_API_KEY'),
+    'authDomain': get_env_variable('FIREBASE_AUTH_DOMAIN'),
+    'projectId': get_env_variable('FIREBASE_PROJECT_ID'),
+    'storageBucket': get_env_variable('FIREBASE_STORAGE_BUCKET'),
+    'messagingSenderId': get_env_variable('FIREBASE_MESSAGING_SENDER_ID'),
+    'appId': get_env_variable('FIREBASE_APP_ID')
+}
+
+def get_firebase_config():
+    """
+    Retorna a configuração do Firebase
+    """
+    return FIREBASE_CONFIG

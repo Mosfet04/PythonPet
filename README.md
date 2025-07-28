@@ -4,16 +4,25 @@
 ![Flask](https://img.shields.io/badge/Flask-2.3.0-green.svg)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Neon-blue.svg)
 ![Peewee ORM](https://img.shields.io/badge/Peewee-ORM-orange.svg)
+![Firebase](https://img.shields.io/badge/Firebase-Auth-orange.svg)
 ![Azure](https://img.shields.io/badge/Azure-Compatible-blue.svg)
 
 API RESTful desenvolvida em Python/Flask para o Portal do Projeto de Extensão de Engenharia Química da Universidade Federal de Uberlândia (PET-EQ). Esta API serve como backend para gerenciamento de membros, atividades, notícias e processos seletivos do grupo PET.
+
+## 🔥 Novidade: Autenticação Firebase
+
+**✅ Sistema migrado do Microsoft Graph para Firebase Auth!**
+- **Aceita todos os domínios** de email (Gmail, Outlook, domínios corporativos, etc.)
+- **Autenticação moderna** e flexível
+- **Compatibilidade total** com código existente
+- **Configuração simplificada** via arquivo `.env`
 
 ## 📋 Sobre o Projeto
 
 Esta API surge da necessidade de modernizar e centralizar o gerenciamento de dados do grupo PET-EQ. O sistema permite:
 
 - **Gestão Centralizada**: Controle unificado de todas as informações do grupo
-- **Autenticação Segura**: Integração com Microsoft Graph para autenticação de administradores
+- **Autenticação Firebase**: Sistema moderno que aceita qualquer email verificado
 - **API RESTful**: Endpoints bem estruturados seguindo padrões REST
 - **Documentação Automática**: Swagger/OpenAPI integrado para documentação interativa
 - **Banco de Dados Moderno**: Utiliza Neon PostgreSQL para alta disponibilidade
@@ -30,8 +39,9 @@ Esta API surge da necessidade de modernizar e centralizar o gerenciamento de dad
 - **Calendário**: Eventos e atividades programadas
 
 ### 🔒 Segurança e Autenticação
-- **JWT Tokens**: Autenticação segura com tokens
-- **Microsoft Graph**: Integração para validação de usuários
+- **JWT Tokens**: Autenticação segura com tokens Firebase
+- **Firebase Auth**: Sistema moderno que aceita qualquer email verificado
+- **Flexibilidade**: Permite usuários de Gmail, Outlook, domínios corporativos, etc.
 - **CORS Configurado**: Acesso controlado para domínios específicos
 - **Validação de Dados**: DTOs para entrada e saída de dados
 
@@ -94,6 +104,14 @@ Esta API surge da necessidade de modernizar e centralizar o gerenciamento de dad
    DB_HOST=ep-xxxxxxxx-xxxxxxxx.us-east-1.aws.neon.tech
    DB_PORT=5432
    DB_SSL=true
+   
+   # Configurações do Firebase Auth
+   FIREBASE_API_KEY=sua_api_key_aqui
+   FIREBASE_AUTH_DOMAIN=seu-projeto.firebaseapp.com
+   FIREBASE_PROJECT_ID=seu-projeto-id
+   FIREBASE_STORAGE_BUCKET=seu-projeto.firebasestorage.app
+   FIREBASE_MESSAGING_SENDER_ID=123456789
+   FIREBASE_APP_ID=1:123456789:web:abcdefghijklmnop
    ```
 
 5. **Configurar Banco Neon PostgreSQL**
@@ -109,12 +127,86 @@ Esta API surge da necessidade de modernizar e centralizar o gerenciamento de dad
    python test_neon_connection.py
    ```
 
-6. **Executar a Aplicação**
+6. **Configurar Firebase Auth (Novo!)**
+   
+   a. Acesse [Firebase Console](https://console.firebase.google.com/)
+   
+   b. Crie um novo projeto ou use existente
+   
+   c. Ative Authentication > Sign-in method > Email/Password
+   
+   d. Copie as configurações do projeto para o arquivo `.env`
+   
+   e. Teste a autenticação:
+   ```bash
+   python test_firebase_migration.py
+   ```
+
+7. **Executar a Aplicação**
    ```bash
    python main.py
    ```
 
-## 📁 Estrutura do Projeto
+## � Autenticação e Segurança
+
+### Sistema Firebase Auth
+
+O sistema utiliza **Firebase Authentication** para validação de usuários:
+
+#### ✅ **Características**
+- **Aceita qualquer email verificado** (Gmail, Outlook, corporativo, etc.)
+- **Tokens JWT seguros** com validação automática
+- **Sem restrição de domínio** por padrão
+- **Compatibilidade total** com código existente
+
+#### 🔧 **Configuração Frontend**
+```javascript
+// firebase-config.js
+import { initializeApp } from 'firebase/app';
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+
+const firebaseConfig = {
+  apiKey: "sua-api-key",
+  authDomain: "seu-projeto.firebaseapp.com",
+  projectId: "seu-projeto-id",
+  // ... outras configurações
+};
+
+const app = initializeApp(firebaseConfig);
+export const auth = getAuth(app);
+
+// Login
+signInWithEmailAndPassword(auth, email, password)
+  .then((userCredential) => {
+    userCredential.user.getIdToken().then((token) => {
+      // Usar token nas chamadas da API
+      fetch('/api/noticias', {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+    });
+  });
+```
+
+#### 🛡️ **Validação no Backend**
+```python
+from Utils.Util import Util
+
+@app.route('/api/noticias', methods=['POST'])
+@Util.token_required  # Valida automaticamente com Firebase
+def create_noticia():
+    # Token já validado, dados do usuário disponíveis
+    user_email = request.firebase_response['email']
+    user_uid = request.firebase_response['uid']
+    # ... lógica da aplicação
+```
+
+#### 🔄 **Migração do Microsoft Graph**
+- ✅ **Migração concluída** - Sistema totalmente funcional
+- ✅ **Zero breaking changes** - Código existente continua funcionando
+- ✅ **Mais flexível** - Aceita qualquer provedor de email
+- ✅ **Melhor experiência** - Autenticação mais rápida e confiável
+
+## �📁 Estrutura do Projeto
 
 ```
 PythonPet/
@@ -157,7 +249,8 @@ PythonPet/
 │   └── SetorModel.py
 │
 ├── 📂 servicos/             # Serviços e utilitários
-│   ├── microsoftGraph.py   # Integração Microsoft Graph
+│   ├── firebase.py         # Integração Firebase Auth
+│   ├── microsoftGraph_backup.py  # Backup - Integração Microsoft Graph (deprecado)
 │   └── postegre.py         # Configuração do banco
 │
 ├── 📂 Utils/                # Utilitários gerais
@@ -260,9 +353,9 @@ graph LR
 #### 🔐 Operações Autenticadas
 ```mermaid
 graph LR
-    A[Frontend] --> B[Token JWT]
+    A[Frontend] --> B[Token Firebase]
     B --> C[API REST]
-    C --> D[Microsoft Graph]
+    C --> D[Firebase Auth]
     D --> E{Token Válido?}
     E -->|Sim| F[Controller]
     E -->|Não| G[Erro 401]
@@ -295,12 +388,21 @@ python main.py
 
 ```env
 # .env para desenvolvimento local
+# Banco de dados
 DB_NAME=seu_banco_dev
 DB_USER=dev_user
 DB_PASSWORD=dev_password
 DB_HOST=localhost  # ou host do Neon
 DB_PORT=5432
 DB_SSL=true
+
+# Firebase Auth
+FIREBASE_API_KEY=sua_api_key_aqui
+FIREBASE_AUTH_DOMAIN=seu-projeto.firebaseapp.com
+FIREBASE_PROJECT_ID=seu-projeto-id
+FIREBASE_STORAGE_BUCKET=seu-projeto.firebasestorage.app
+FIREBASE_MESSAGING_SENDER_ID=123456789
+FIREBASE_APP_ID=1:123456789:web:abcdefghijklmnop
 
 # Configurações opcionais
 FLASK_ENV=development
@@ -357,6 +459,8 @@ flask-cors==5.0.0         # CORS support
 flask_jwt_extended==4.6.0 # JWT authentication
 python-dotenv==1.0.1      # Variáveis de ambiente
 requests==2.32.3          # HTTP requests
+firebase-admin==6.4.0     # Firebase Admin SDK (opcional)
+google-auth==2.25.2       # Google Auth (Firebase)
 ```
 
 ## 🚀 Deploy e Produção
@@ -379,12 +483,23 @@ O código é compatível com:
 
 ```env
 # Produção
+# Banco de dados
 DB_NAME=prod_database
 DB_USER=prod_user
 DB_PASSWORD=secure_password
 DB_HOST=prod.neon.tech
 DB_PORT=5432
 DB_SSL=true
+
+# Firebase Auth (produção)
+FIREBASE_API_KEY=prod_api_key
+FIREBASE_AUTH_DOMAIN=prod-projeto.firebaseapp.com
+FIREBASE_PROJECT_ID=prod-projeto-id
+FIREBASE_STORAGE_BUCKET=prod-projeto.firebasestorage.app
+FIREBASE_MESSAGING_SENDER_ID=prod_sender_id
+FIREBASE_APP_ID=prod_app_id
+
+# Ambiente
 FLASK_ENV=production
 ```
 
@@ -443,9 +558,19 @@ Para dúvidas e suporte:
 - [Documentação Flask](https://flask.palletsprojects.com/)
 - [Peewee ORM Docs](http://docs.peewee-orm.com/)
 - [Neon PostgreSQL](https://neon.tech/docs)
-- [Microsoft Graph API](https://docs.microsoft.com/graph/)
+- [Firebase Auth Documentation](https://firebase.google.com/docs/auth)
+- [Firebase Console](https://console.firebase.google.com/)
 - [Frontend do Projeto](https://github.com/usuario/frontend-pet-eq)
 
 ---
 
 Desenvolvido com ❤️ pelo grupo PET-EQ da Universidade Federal de Uberlândia
+
+## 📋 Changelog
+
+### v2.0.0 - Sistema Firebase Auth
+- ✅ **Migração completa** do Microsoft Graph para Firebase Auth
+- ✅ **Aceita todos os domínios** de email verificados
+- ✅ **Zero breaking changes** - compatibilidade total
+- ✅ **Configuração simplificada** via arquivo `.env`
+- ✅ **Melhor experiência** de autenticação
