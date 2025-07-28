@@ -80,9 +80,28 @@ app.register_blueprint(calendarioAtividades_bp, url_prefix="/api")
 
 if __name__ == "__main__":
     try:
+        # Teste de conexão com o banco
+        print("Tentando conectar ao banco de dados...")
         db.connect()
+        print("Conexão com o banco estabelecida com sucesso!")
+        
+        # Para Neon PostgreSQL: definir search_path após a conexão (não nas startup options)
+        print("Configurando schema público para Neon...")
+        try:
+            db.execute_sql("SET search_path TO public;")
+            print("Schema público configurado!")
+        except Exception as schema_error:
+            print(f"Aviso: Não foi possível definir schema explicitamente: {schema_error}")
+            print("Continuando com schema padrão...")
+        
+        # Criação das tabelas
+        print("Criando tabelas...")
         db.create_tables([Integrante, Setor, Noticia, NoticiasCategoria, CategoriaEventoJorneq, Jorneq, MiniCursos, PatrocinadoresJorneq, PlanejamentoRelatorio, ProcessoSeletivo, ProgramacaoJorneq, Pesquisa, Extensao, CalendarioAtividades], safe=True)
+        print("Tabelas criadas com sucesso!")
+        
+        # Inserção de dados iniciais
         if Setor.select().count() == 0:
+            print("Inserindo setores padrão...")
             # Inserir registros
             Setor.insert_many([
                 {'id': 1, 'nome': 'Computação'},
@@ -90,18 +109,29 @@ if __name__ == "__main__":
                 {'id': 3, 'nome': 'Marketing'},
                 {'id': 4, 'nome': 'Orientador'},
             ]).execute()
+            print("Setores inseridos com sucesso!")
         
         if NoticiasCategoria.select().count() == 0:
+            print("Inserindo categorias de notícias padrão...")
             NoticiasCategoria.insert_many([
                 {'id': 1, 'nome': 'Ensino'},
                 {'id': 2, 'nome': 'Pesquisa'},
                 {'id': 3, 'nome': 'Extensão'},
                 {'id': 4, 'nome': 'Processo Seletivo'}
             ]).execute()
+            print("Categorias de notícias inseridas com sucesso!")
             
+        print("Iniciando servidor Flask...")
         app.run(host='0.0.0.0', debug=True)
     except Exception as e:
         print(f"Erro ao conectar ou criar tabelas no banco de dados: {e}")
+        print("Verifique se:")
+        print("1. O arquivo .env está configurado corretamente")
+        print("2. As credenciais do Neon estão corretas")
+        print("3. A connection string do Neon está válida")
+        print("4. O schema público está acessível no Neon")
+        print("5. Para Neon: use conexão pooled (padrão) sem parâmetros startup customizados")
     finally:
         if not db.is_closed():
+            print("Fechando conexão com o banco...")
             db.close()

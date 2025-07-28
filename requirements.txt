@@ -15,7 +15,7 @@ MarkupSafe==2.1.5
 mistune==3.0.2
 packaging==24.1
 peewee==3.17.6
-psycopg2==2.9.9
+psycopg2-binary==2.9.9
 pydantic==2.8.2
 pydantic_core==2.20.1
 python-dotenv==1.0.1

@@ -31,7 +31,7 @@ DATABASE = {
     'password': get_env_variable('DB_PASSWORD', 'default_password'),
     'host': get_env_variable('DB_HOST', 'localhost'),
     'port': get_env_variable('DB_PORT', '5432'),
-    'ssl': get_env_variable('DB_SSL', 'false').lower() == 'true'
+    'ssl': get_env_variable('DB_SSL', 'true').lower() == 'true'  # SSL habilitado por padrão para Neon
 }
 
 # Função para conectar ao banco de dados
@@ -42,7 +42,7 @@ def get_database():
             user=DATABASE['user'],
             password=DATABASE['password'],
             host=DATABASE['host'],
-            port=DATABASE['port'],
+            port=int(DATABASE['port']),
             sslmode='require'
         )
     else:
@@ -51,7 +51,7 @@ def get_database():
             user=DATABASE['user'],
             password=DATABASE['password'],
             host=DATABASE['host'],
-            port=DATABASE['port']
+            port=int(DATABASE['port'])
         )
 
 # Outras configurações globais
