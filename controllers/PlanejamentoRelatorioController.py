@@ -8,15 +8,22 @@ from models.PlanejamentoRelatorioModel import PlanejamentoRelatorio
 from dtos.requests.PlanejamentoRelatorio.CreatePlanejamentoRelatorioRequest import CreatePlanejamentoRelatorioRequest
 from dtos.requests.Noticias.UpdateNoticiaRequest import UpdateNoticiaRequest
 from dtos.responses.PlanejamentoRelatorioResponse import PlanejamentoRelatorioResponse
+from servicos.cache_service import cache_result, invalidate_cache
 
+@cache_result("create_planejamentoRelatorio")
 def create_planejamentoRelatorio(request: CreatePlanejamentoRelatorioRequest) -> PlanejamentoRelatorioResponse:
     """
     Função para inserir o documento de planejamento ou relatorio anual
     """
-    return PlanejamentoRelatorio.salvarPlanejamentoRelatorio(request)
+    result = PlanejamentoRelatorio.salvarPlanejamentoRelatorio(request)
+    
+    # Invalida cache de listagem após criação
+    invalidate_cache("list_planejamentoRelatorio")
+    
+    return result
 
 
-
+@cache_result("list_planejamentoRelatorio")
 def list_planejamentoRelatorio(page: int = 1, per_page: int = 10, idDocumento: Optional[int] = None) -> dict:
     """
     Função para listar todos os integrantes do banco de dados.
@@ -32,5 +39,10 @@ def remove_planejamentoRelatorio(idDocumento: int) -> bool:
 
     if not planejamentoRelatorio:
         raise IntegrityError("Documento não encontrado")
-    # Deleta o integrante
-    return planejamentoRelatorio.deletar()
+    
+    result = planejamentoRelatorio.deletar()
+    
+    # Invalida cache relacionado após remoção
+    invalidate_cache("list_planejamentoRelatorio")
+    
+    return result

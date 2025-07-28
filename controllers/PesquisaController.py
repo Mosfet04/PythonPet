@@ -6,17 +6,23 @@ from dtos.requests.Pesquisa.UpdatePesquisaRequest import UpdatePesquisaRequest
 from dtos.responses.PesquisaResponse import PesquisaResponse
 from models.PesquisaModel import Pesquisa
 from models.IntegranteModel import Integrante
+from servicos.cache_service import cache_result, invalidate_cache
 
 
+@cache_result("create_pesquisa")
 def create_pesquisa(request: CreatePesquisaRequest) -> PesquisaResponse:
     """
     Função para inserir pesquisa coletiva no banco de dados.
     """
+    result = Pesquisa.criarPesquisa(request)
+    
+    # Invalida cache de listagem após criação
+    invalidate_cache("list_pesquisas")
+    
+    return result
 
-    # Cria um novo integrante no banco de dados
-    return Pesquisa.criarPesquisa(request)
 
-
+@cache_result("list_pesquisas")
 def list_pesquisas(ativo, page, per_page) -> list[PesquisaResponse]:
     """
     Função para listar todas as pesquisas coletivas do banco de dados.
@@ -24,6 +30,7 @@ def list_pesquisas(ativo, page, per_page) -> list[PesquisaResponse]:
     response = Pesquisa.listarPesquisas(ativo, page, per_page)
     return response.to_dict()
 
+@cache_result("update_pesquisas") 
 def update_pesquisas(request: UpdatePesquisaRequest, idPesquisa: int) -> PesquisaResponse:
     """
     Função para atualizar os dados de uma pesquisa coletiva
@@ -35,7 +42,13 @@ def update_pesquisas(request: UpdatePesquisaRequest, idPesquisa: int) -> Pesquis
         raise IntegrityError("Pesquisa coletiva não encontrada")
     
     # Atualiza os dados do integrante
-    return pesquisa_update.atualizarPesquisa(request)
+    result = pesquisa_update.atualizarPesquisa(request)
+    
+    # Invalida cache relacionado após atualização
+    invalidate_cache("list_pesquisas")
+    invalidate_cache("update_pesquisas", {"arg_1": idPesquisa})
+    
+    return result
 
 def remove_pesquisa(idMinicurso: int) -> bool:
     """
@@ -47,4 +60,9 @@ def remove_pesquisa(idMinicurso: int) -> bool:
         raise IntegrityError("Pesquisa coletiva não encontrado")
     
     # Deleta o integrante
-    return pesquisa_remove.deletar()
+    result = pesquisa_remove.deletar()
+    
+    # Invalida cache relacionado após remoção
+    invalidate_cache("list_pesquisas")
+    
+    return result

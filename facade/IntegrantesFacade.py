@@ -31,9 +31,11 @@ def get_integrantes():
     """
     Lista todas os integrantes
     """
-    ativo = request.args.get("ativo", default=False, type=bool)
+    ativo = request.args.get("ativo")
     page = request.args.get("page", default=1, type=int)
     per_page = request.args.get("per_page", default=10, type=int)
+    if(ativo != None):
+        ativo = Util.str_to_bool(ativo)
     integrantes = list_integrantes(ativo, page, per_page)
     
     return jsonify(integrantes)

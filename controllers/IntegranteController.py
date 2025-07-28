@@ -5,7 +5,9 @@ from dtos.requests.Integrante.UpdateIntegranteRequest import UpdateIntegranteReq
 from models.IntegranteModel import Integrante
 from dtos.requests.Integrante.CreateIntegranteRequest import CreateIntegranteRequest
 from dtos.responses.IntegranteResponse import IntegranteResponse
+from servicos.cache_service import cache_result, invalidate_cache
 
+@cache_result("create_integrante")
 def create_integrante(request: CreateIntegranteRequest) -> IntegranteResponse:
     """
     Função para inserir o integrante
@@ -16,9 +18,15 @@ def create_integrante(request: CreateIntegranteRequest) -> IntegranteResponse:
         raise IntegrityError("Integrante já cadastrado")
 
     # Cria um novo integrante no banco de dados
-    return Integrante.criarIntegrante(request)
+    result = Integrante.criarIntegrante(request)
+    
+    # Invalida cache de listagem após criação
+    invalidate_cache("list_integrantes")
+    
+    return result
 
 
+@cache_result("list_integrantes")
 def list_integrantes(ativo, page, per_page) -> list[IntegranteResponse]:
     """
     Função para listar todos os integrantes do banco de dados.
@@ -26,6 +34,7 @@ def list_integrantes(ativo, page, per_page) -> list[IntegranteResponse]:
     response = Integrante.listarIntegrantes(ativo, page, per_page)
     return response.to_dict()
 
+@cache_result("update_integrante")
 def update_integrante(request: UpdateIntegranteRequest, idIntegrante: bool) -> IntegranteResponse:
     """
     Função para atualizar os dados de um integrante.
@@ -37,7 +46,13 @@ def update_integrante(request: UpdateIntegranteRequest, idIntegrante: bool) -> I
         raise IntegrityError("Integrante não encontrado")
 
     # Atualiza os dados do integrante
-    return integrante.atualizarIntegrante(request)
+    result = integrante.atualizarIntegrante(request)
+    
+    # Invalida cache relacionado após atualização
+    invalidate_cache("list_integrantes")
+    invalidate_cache("update_integrante", {"arg_1": idIntegrante})
+    
+    return result
 
 def remove_integrante(idIntegrante: int) -> bool:
     """
@@ -50,4 +65,9 @@ def remove_integrante(idIntegrante: int) -> bool:
         raise IntegrityError("Integrante não encontrado, verifique o ID do integrante")
 
     # Deleta o integrante
-    return integrante.deletarIntegrante()
+    result = integrante.deletarIntegrante()
+    
+    # Invalida cache relacionado após remoção
+    invalidate_cache("list_integrantes")
+    
+    return result
