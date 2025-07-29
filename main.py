@@ -9,7 +9,7 @@ from facade.PesquisaFacade import pesquisa_bp
 from facade.ExtensaoFacade import extensao_bp
 from facade.CalendarioAtividadesFacade import calendarioAtividades_bp
 from facade.CacheAdminFacade import cache_admin_bp
-from facade.CacheAdminFacade import cache_admin_bp
+from facade.HealthFacade import health_bp
 from models.IntegranteModel import Integrante
 from models.SetorModel import Setor
 from models.NoticiasModel import Noticia
@@ -80,7 +80,7 @@ app.register_blueprint(pesquisa_bp, url_prefix="/api")
 app.register_blueprint(extensao_bp, url_prefix="/api")
 app.register_blueprint(calendarioAtividades_bp, url_prefix="/api")
 app.register_blueprint(cache_admin_bp, url_prefix="/api")
-app.register_blueprint(cache_admin_bp, url_prefix="/api")
+app.register_blueprint(health_bp, url_prefix="/api")
 
 if __name__ == "__main__":
     try:

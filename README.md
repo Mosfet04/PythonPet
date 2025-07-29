@@ -39,6 +39,14 @@ Esta API surge da necessidade de modernizar e centralizar o gerenciamento de dad
 - **Monitoramento**: Endpoints administrativos para métricas de performance
 - **87.5% de Cobertura**: Cache implementado em 7 de 8 controllers principais
 
+### 🏥 Health Check e Monitoramento (NOVO!)
+- **Dashboard Administrativo**: Página principal consome health checks em tempo real
+- **Monitoramento Completo**: Banco de dados, cache, recursos do sistema
+- **Alertas Visuais**: Status colorido para identificação rápida de problemas
+- **Métricas de Performance**: Tempo de resposta, uso de CPU/RAM/disco
+- **Compatibilidade Docker/K8s**: Endpoints prontos para orquestradores
+- **Atualização Automática**: Dashboard se atualiza a cada 30 segundos
+
 ### 📊 Gestão de Dados
 - **Integrantes**: CRUD completo para membros ativos e inativos
 - **Setores**: Organização por áreas (Computação, Ata, Marketing, Orientador)
@@ -300,6 +308,72 @@ Acesse a documentação Swagger em: `http://localhost:5000/api/docs/`
     "ttl_hours": 5.0,
     "hit_rate": "94.2%",
     "performance_improvement": "356x faster"
+  }
+}
+```
+
+### 🏥 Endpoints de Health Check (NOVO!)
+
+**✅ Sistema completo de monitoramento de saúde da aplicação!**
+
+Os health checks são **consumidos pela página principal de administração** da aplicação, oferecendo **visibilidade em tempo real** do status de todos os componentes críticos.
+
+#### Endpoints Disponíveis:
+- `GET /api/health` - Health check básico da aplicação
+- `GET /api/health/detailed` - Verificação detalhada (banco, cache, sistema)
+- `GET /api/health/ready` - Readiness check (pronto para tráfego)
+- `GET /api/health/live` - Liveness check (aplicação responsiva)
+
+#### 🎯 Integração com Frontend Administrativo
+```javascript
+// Consumido automaticamente pela página de admin
+fetch('/api/health/detailed')
+  .then(response => response.json())
+  .then(data => {
+    // Dashboard exibe status em tempo real:
+    updateHealthDashboard(data.checks.database);   // Status BD
+    updateCacheStatus(data.checks.cache);          // Status Cache  
+    updateSystemMetrics(data.checks.system);       // CPU/RAM/Disco
+  });
+```
+
+#### 📊 Verificações Realizadas:
+- **🗄️ Banco de Dados**: Conectividade, tempo de resposta, acesso às tabelas
+- **⚡ Cache**: Disponibilidade, operações básicas, integridade
+- **💻 Sistema**: CPU, memória, disco (se psutil disponível)
+- **🌐 Conectividade**: Status geral da aplicação
+
+#### ⚡ Dashboard de Administração
+A **página principal de administração** consome estes endpoints para exibir:
+- ✅ **Status em tempo real** de todos os componentes
+- 📈 **Métricas de performance** (tempo de resposta do BD, uso de recursos)
+- 🚨 **Alertas visuais** para componentes com problemas
+- 🔄 **Atualização automática** a cada 30 segundos
+- 📊 **Histórico de saúde** dos últimos períodos
+
+**Exemplo de Resposta - Health Detalhado:**
+```json
+{
+  "status": "healthy",
+  "timestamp": "2024-01-01T12:00:00.000Z",
+  "service": "PythonPet API",
+  "version": "1.0.0",
+  "checks": {
+    "database": {
+      "status": "healthy", 
+      "response_time_ms": 25.5,
+      "details": "Database connection successful"
+    },
+    "cache": {
+      "status": "healthy",
+      "details": "Cache service is working properly"
+    },
+    "system": {
+      "status": "healthy",
+      "cpu_usage_percent": 15.2,
+      "memory_usage_percent": 45.8,
+      "disk_usage_percent": 35.1
+    }
   }
 }
 ```
@@ -592,6 +666,28 @@ A aplicação produz logs detalhados no terminal. Procure por:
 - ⚠️ Avisos (configurações não ideais)
 - ❌ Erros (problemas de conexão, dados inválidos)
 
+### 🏥 Monitoramento via Health Checks
+
+**Use os endpoints de health check para diagnóstico rápido:**
+
+```bash
+# Verificação básica
+curl http://localhost:5000/api/health
+
+# Diagnóstico completo
+curl http://localhost:5000/api/health/detailed
+
+# Verificar se está pronto para produção
+curl http://localhost:5000/api/health/ready
+```
+
+**Interpretar respostas:**
+- **HTTP 200 + status "healthy"**: Tudo funcionando
+- **HTTP 503 + status "unhealthy"**: Problemas críticos
+- **status "degraded"**: Problemas não críticos (ex: cache offline)
+
+**Dashboard administrativo** também exibe estes dados visualmente na página principal.
+
 ## 📚 Dependências Principais
 
 ```python
@@ -724,6 +820,16 @@ Para dúvidas e suporte:
 Desenvolvido com ❤️ pelo grupo PET-EQ da Universidade Federal de Uberlândia
 
 ## 📋 Changelog
+
+### v2.2.0 - Sistema de Health Check e Monitoramento (NOVO!)
+- 🏥 **Endpoints de health check completos** para monitoramento de saúde
+- 📊 **Dashboard administrativo** consumindo health checks em tempo real
+- 🔍 **Verificações detalhadas** de banco de dados, cache e sistema
+- ⚡ **Métricas de performance** com tempo de resposta e uso de recursos
+- 🚨 **Alertas visuais** para identificação rápida de problemas
+- 🐳 **Compatibilidade Docker/Kubernetes** com readiness e liveness probes
+- 🔄 **Atualização automática** do dashboard a cada 30 segundos
+- 📚 **Documentação completa** com exemplos de uso e configuração
 
 ### v2.1.0 - Sistema de Cache Inteligente (NOVO!)
 - ⚡ **Sistema de cache em memória** com performance até 500x mais rápida
