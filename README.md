@@ -5,9 +5,12 @@
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Neon-blue.svg)
 ![Peewee ORM](https://img.shields.io/badge/Peewee-ORM-orange.svg)
 ![Firebase](https://img.shields.io/badge/Firebase-Auth-orange.svg)
-![Azure](https://img.shields.io/badge/Azure-Compatible-blue.svg)
+![AWS Lambda](https://img.shields.io/badge/AWS-Lambda-orange.svg)
+![Docker](https://img.shields.io/badge/Docker-Container-blue.svg)
 
 API RESTful desenvolvida em Python/Flask para o Portal do Projeto de Extensão de Engenharia Química da Universidade Federal de Uberlândia (PET-EQ). Esta API serve como backend para gerenciamento de membros, atividades, notícias e processos seletivos do grupo PET.
+
+**🚀 Deploy em Produção: AWS Lambda com Container Images**
 
 ## 🔥 Novidade: Autenticação Firebase
 
@@ -718,15 +721,150 @@ time                      # TTL e timestamps (Python built-in)
 
 ## 🚀 Deploy e Produção
 
-### Para Azure App Service
+### 🎯 Deploy Recomendado: AWS Lambda (Container Images)
+
+**✅ Deploy em produção utilizando AWS Lambda com Container Images!**
+
+A API está otimizada para deploy serverless utilizando **AWS Lambda Container Images**, oferecendo:
+
+- **💰 Custo Reduzido**: 50-90% mais barato que EC2 tradicional
+- **🚀 Escalabilidade Automática**: Lambda escala automaticamente conforme demanda
+- **📦 Suporte a Aplicações Grandes**: Até 10GB (vs 250MB do Lambda tradicional)
+- **🐳 Container Docker**: Deploy usando imagem Docker customizada
+- **⚡ Alta Disponibilidade**: Infraestrutura gerenciada pela AWS
+- **💻 Zero Manutenção**: Sem servidores para gerenciar
+
+#### 📋 Pré-requisitos para AWS Lambda
+
+1. **Conta AWS** com credenciais configuradas
+2. **Docker Desktop** instalado e em execução
+3. **Serverless Framework** v4.0+ instalado globalmente
+4. **Node.js** 18+ (para Serverless Framework)
+5. **Permissões IAM** adequadas (CloudFormation, Lambda, ECR, S3)
+
+#### 🔧 Configuração Rápida
+
+1. **Instale o Serverless Framework**:
+   ```bash
+   npm install -g serverless
+   ```
+
+2. **Configure suas Credenciais AWS**:
+   ```bash
+   aws configure
+   # AWS Access Key ID: sua-access-key
+   # AWS Secret Access Key: sua-secret-key
+   # Default region: us-east-1
+   ```
+
+3. **Configure o arquivo serverless.yml**:
+   
+   Copie o arquivo de exemplo e configure suas credenciais:
+   ```bash
+   cp serverless.yml.example serverless.yml
+   ```
+   
+   Edite `serverless.yml` e configure:
+   - `DB_NAME`, `DB_USER`, `DB_PASSWORD`, `DB_HOST` (PostgreSQL/Neon)
+   - `FIREBASE_API_KEY`, `FIREBASE_PROJECT_ID`, etc. (Firebase Auth)
+   
+   **⚠️ IMPORTANTE**: Nunca commite `serverless.yml` com credenciais reais para repositórios públicos!
+
+4. **Inicie o Docker Desktop** (obrigatório para build de imagens)
+
+5. **Faça o Deploy**:
+   ```bash
+   serverless deploy
+   ```
+
+   O Serverless Framework irá:
+   - ✅ Criar bucket S3 para deployment
+   - ✅ Criar repositório ECR para imagens Docker
+   - ✅ Construir imagem Docker da aplicação
+   - ✅ Fazer push da imagem para ECR
+   - ✅ Criar função Lambda com a imagem
+   - ✅ Configurar API Gateway HTTP API
+   - ✅ Retornar endpoint público da API
+
+#### 🌐 Endpoint de Produção
+
+Após o deploy bem-sucedido, você receberá um endpoint como:
+```
+https://xxxxxxxxxx.execute-api.us-east-1.amazonaws.com
+```
+
+Teste o endpoint:
+```bash
+# Health check
+curl https://seu-endpoint.execute-api.us-east-1.amazonaws.com/api/health
+
+# Swagger docs
+curl https://seu-endpoint.execute-api.us-east-1.amazonaws.com/api/docs/
+
+# Listagem de integrantes
+curl https://seu-endpoint.execute-api.us-east-1.amazonaws.com/api/integrantes
+```
+
+#### 📊 Custo Estimado (AWS Lambda)
+
+**Análise Real de Custo**:
+- **Requisições**: 100.000/mês
+- **Duração Média**: 500ms por requisição
+- **Memória**: 512MB
+
+**Custo Mensal**:
+- Sem Free Tier: ~$9 USD/mês
+- Com Free Tier: ~$0-2 USD/mês (primeiro ano)
+- **50-90% mais barato** que EC2 t2.micro equivalente
+
+#### 📖 Documentação Completa
+
+Para guia passo-a-passo detalhado sobre deploy AWS Lambda, consulte:
+- **[DEPLOY_AWS_LAMBDA.md](DEPLOY_AWS_LAMBDA.md)** - Documentação completa com troubleshooting
+
+Este guia inclui:
+- ✅ Pré-requisitos e instalação
+- ✅ Configuração de permissões IAM
+- ✅ Configuração do Dockerfile para Lambda
+- ✅ Configuração do serverless.yml
+- ✅ Processo de deploy passo-a-passo
+- ✅ Testes e validação
+- ✅ Troubleshooting de erros comuns
+- ✅ Análise de custos detalhada
+- ✅ Glossário de termos AWS
+
+#### 🔄 Comandos Úteis
+
+```bash
+# Deploy/atualizar a aplicação
+serverless deploy
+
+# Ver logs da função Lambda
+serverless logs -f api --tail
+
+# Remover toda a infraestrutura
+serverless remove
+
+# Invocar função Lambda localmente
+serverless invoke local -f api --data '{"httpMethod":"GET","path":"/api/health"}'
+
+# Listar informações do deploy
+serverless info
+```
+
+---
+
+### 🌍 Outros Ambientes de Deploy
+
+#### Para Azure App Service
 
 1. Configure as variáveis de ambiente no portal Azure
 2. Use o arquivo `requirements.txt` para instalação automática
 3. Configure o comando de inicialização: `python main.py`
 
-### Para Outras Plataformas
+#### Para Outras Plataformas
 
-O código é compatível com:
+O código também é compatível com:
 - **Heroku**: Configure Procfile
 - **Railway**: Deploy direto do GitHub
 - **Render**: Configure build e start commands
@@ -735,7 +873,7 @@ O código é compatível com:
 ### Variáveis de Ambiente para Produção
 
 ```env
-# Produção
+# Produção (AWS Lambda ou outras plataformas)
 # Banco de dados
 DB_NAME=prod_database
 DB_USER=prod_user
@@ -813,6 +951,9 @@ Para dúvidas e suporte:
 - [Neon PostgreSQL](https://neon.tech/docs)
 - [Firebase Auth Documentation](https://firebase.google.com/docs/auth)
 - [Firebase Console](https://console.firebase.google.com/)
+- [Serverless Framework](https://www.serverless.com/framework/docs)
+- [AWS Lambda Documentation](https://docs.aws.amazon.com/lambda/)
+- [Docker Documentation](https://docs.docker.com/)
 - [Frontend do Projeto](https://github.com/usuario/frontend-pet-eq)
 
 ---
@@ -821,7 +962,19 @@ Desenvolvido com ❤️ pelo grupo PET-EQ da Universidade Federal de Uberlândia
 
 ## 📋 Changelog
 
-### v2.2.0 - Sistema de Health Check e Monitoramento (NOVO!)
+### v3.0.0 - Deploy AWS Lambda com Container Images (NOVO!)
+- 🚀 **Deploy serverless completo** usando AWS Lambda Container Images
+- 💰 **Custo otimizado** - 50-90% mais barato que EC2 tradicional
+- 📦 **Suporte a aplicações grandes** - até 10GB (vs 250MB Lambda tradicional)
+- 🐳 **Container Docker customizado** com Python 3.9 Lambda runtime
+- ⚡ **Escalabilidade automática** - Lambda escala conforme demanda
+- 🔒 **Segurança aprimorada** - variáveis de ambiente protegidas
+- 📖 **Documentação completa** - guia passo-a-passo em DEPLOY_AWS_LAMBDA.md
+- 🛠️ **Arquivo de exemplo** - serverless.yml.example para configuração
+- ✅ **Testado e validado** - API em produção funcionando perfeitamente
+- 🌐 **API Gateway HTTP** - endpoints públicos com roteamento automático
+
+### v2.2.0 - Sistema de Health Check e Monitoramento
 - 🏥 **Endpoints de health check completos** para monitoramento de saúde
 - 📊 **Dashboard administrativo** consumindo health checks em tempo real
 - 🔍 **Verificações detalhadas** de banco de dados, cache e sistema
@@ -831,7 +984,7 @@ Desenvolvido com ❤️ pelo grupo PET-EQ da Universidade Federal de Uberlândia
 - 🔄 **Atualização automática** do dashboard a cada 30 segundos
 - 📚 **Documentação completa** com exemplos de uso e configuração
 
-### v2.1.0 - Sistema de Cache Inteligente (NOVO!)
+### v2.1.0 - Sistema de Cache Inteligente
 - ⚡ **Sistema de cache em memória** com performance até 500x mais rápida
 - 🎯 **TTL de 5 horas** configurável para otimização automática
 - 🔒 **Thread-safe** com `threading.RLock()` para acesso concorrente

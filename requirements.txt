@@ -32,3 +32,4 @@ firebase-admin==6.4.0
 google-auth==2.25.2
 flask-cors==5.0.0
 psutil==5.9.8
+serverless-wsgi==3.0.4

@@ -1,0 +1,60 @@
+service: python-pet-api
+
+provider:
+  name: aws
+  region: us-east-1
+  memorySize: 512
+  timeout: 30
+  
+  # Bucket S3 para armazenar artefatos de deployment
+  deploymentBucket:
+    name: python-pet-api-deployments-${aws:accountId}
+    serverSideEncryption: AES256
+  
+  # Variáveis de ambiente da aplicação
+  environment:
+    # Configurações do Banco de Dados PostgreSQL (Neon)
+    DB_NAME: seu_banco_de_dados
+    DB_USER: seu_usuario
+    DB_PASSWORD: sua_senha_segura_aqui
+    DB_HOST: ep-xxxxxxxx-xxxxxxxx.us-east-1.aws.neon.tech
+    DB_PORT: 5432
+    DB_SSL: true
+    
+    # Configurações do Firebase Auth
+    FIREBASE_API_KEY: sua_firebase_api_key_aqui
+    FIREBASE_AUTH_DOMAIN: seu-projeto.firebaseapp.com
+    FIREBASE_PROJECT_ID: seu-projeto-id
+    FIREBASE_STORAGE_BUCKET: seu-projeto.firebasestorage.app
+    FIREBASE_MESSAGING_SENDER_ID: 123456789012
+    FIREBASE_APP_ID: 1:123456789012:web:abcdefghijklmnopqrst
+
+functions:
+  api:
+    # Usar imagem Docker do ECR
+    image:
+      name: appimage
+    
+    # Configurar API Gateway HTTP API
+    events:
+      - httpApi:
+          path: /{proxy+}
+          method: ANY
+      - httpApi:
+          path: /
+          method: ANY
+
+# Configuração da imagem Docker
+resources:
+  extensions:
+    ApiLogicalID:
+      Properties:
+        # Desabilitar execução de stage padrão (usar $default)
+        StageName: $default
+
+# Imagens do ECR para Lambda
+ecr:
+  images:
+    appimage:
+      path: ./
+      file: Dockerfile
